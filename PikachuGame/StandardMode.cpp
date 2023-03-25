@@ -225,7 +225,7 @@ void StandardMode1()
 				{
 						selpos[1].Y = curpos.Y;
 						selpos[1].X = curpos.X;
-						if (checkAll(newboard, selpos[0], selpos[1], 8) == 1 && newboard[selpos[0].Y][selpos[0].X].KeyinBox() == newboard[selpos[1].Y][selpos[1].X].KeyinBox())//khi co thuat toan check I U Z L se thay the dong code nay	
+						if (checkAll(newboard, selpos[0], selpos[1],8) == 1 && newboard[selpos[0].Y][selpos[0].X].KeyinBox() == newboard[selpos[1].Y][selpos[1].X].KeyinBox())//khi co thuat toan check I U Z L se thay the dong code nay	
 						{						
 							newboard[selpos[0].Y][selpos[0].X].deBox();
 							newboard[selpos[1].Y][selpos[1].X].deBox();
@@ -253,12 +253,12 @@ void StandardMode1()
 
 void generateBoard(board& curboard, int ROWS, int COLS, int amountpoke) 
 {
-
-	int * typeLimit = new int[8];
+	int temp = ROWS - 2;
+	int * typeLimit = new int[temp];
 	//min xài để đếm số lượng tối thiểu 1 pokemon sẽ xuất hiện
-	int minPoke = (ROWS * COLS) / amountpoke;
+	int minPoke = (temp * temp) / amountpoke;
 	//excess dùng để tính có bao nhiêu pokemon sẽ dc +2 vào số lượng có thể dc xuất hiện
-	int excessPoke = ((ROWS * COLS) % amountpoke) / 2;
+	int excessPoke = ((temp * temp) % amountpoke) / 2;
 	//phân bổ số lượng vào từng pokemon
 	for (int i = 0; i < amountpoke; i++)
 	{
@@ -275,8 +275,8 @@ void generateBoard(board& curboard, int ROWS, int COLS, int amountpoke)
 	//khai báo mảng động
 	
 	//Tạo phần tử ngẫu nhiên
-	for (int i = 0; i < ROWS; i++) {
-		for (int k = 0; k < COLS; k++)
+	for (int i = 1; i < ROWS - 1; i++) {
+		for (int k = 1; k < COLS - 1; k++)
 		{
 			int random;
 			do {
