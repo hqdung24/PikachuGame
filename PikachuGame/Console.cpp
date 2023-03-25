@@ -58,13 +58,11 @@ void ShowScrollbar(BOOL Show)
 //Ẩn hiện con trỏ
 void ShowCur(bool CursorVisibility)
 {
-    HANDLE handle = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_CURSOR_INFO ConCurInf;
-
-    ConCurInf.dwSize = 10;
-    ConCurInf.bVisible = CursorVisibility;
-
-    SetConsoleCursorInfo(handle, &ConCurInf);
+    HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_CURSOR_INFO info;
+    GetConsoleCursorInfo(consoleHandle, &info);
+    info.bVisible = false; // set the cursor visibility to false
+    SetConsoleCursorInfo(consoleHandle, &info);
 }
 
 
@@ -76,14 +74,29 @@ void DisableSelection()
     SetConsoleMode(hStdin, ~ENABLE_QUICK_EDIT_MODE);
 }
 
+void setAndCenterWindow()
+{
+    RECT rectClient, rectWindow;
+    HWND consoleWindow = GetConsoleWindow();
+    GetClientRect(consoleWindow, &rectClient), GetWindowRect(consoleWindow, &rectWindow);
+    int width = 1100;
+    int height = 768;
+    int posX = (GetSystemMetrics(SM_CXSCREEN) - width) / 2,
+        posY = (GetSystemMetrics(SM_CYSCREEN) - height) / 2;
+    MoveWindow(consoleWindow, posX, posY, width, height, TRUE);
+}
+
+
+
 void ConsoleSetting()
 {
     SetConsoleTitle(L"PikachuGame.exe");
 
-    SetWindowSize(100, 40);
-    SetScreenBufferSize(100, 40);
-    DisableResizeWindow();
+    SetWindowSize(80, 60);
+    SetScreenBufferSize(100, 50);
+    //DisableResizeWindow();
     ShowScrollbar(0);
     ShowCur(0);
+    setAndCenterWindow();
     DisableSelection();
 }

@@ -18,4 +18,5 @@ void DisableSelection();
 
 void ConsoleSetting();
 
+void setAndCenterWindow();
 

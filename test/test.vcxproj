@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{f39db78f-458f-4009-8ad5-a6f587aefc40}</ProjectGuid>
-    <RootNamespace>PikachuGame</RootNamespace>
+    <ProjectGuid>{0bb1e910-c010-41af-885c-23441b51933e}</ProjectGuid>
+    <RootNamespace>test</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -127,18 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Check.cpp" />
-    <ClCompile Include="Console.cpp" />
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Menu.cpp" />
-    <ClCompile Include="StandardMode.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Check.h" />
-    <ClInclude Include="Console.h" />
-    <ClInclude Include="Menu.h" />
-    <ClInclude Include="StandardMode.h" />
-    <ClInclude Include="Struct.h" />
+    <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

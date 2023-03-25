@@ -15,7 +15,73 @@ void printBanner()
                      |  ____/   | |  | |< <   / /\ \ | |      |  __)| || |   | |
                      | |       _| |_ | | \ \ | |--| || \_____ | |   | || |___| |
                      |_|      (_____)|_|  \_)|_|  |_| \______)|_|   |_| \______|
-                                                             )";
+                                   
+)";
+    cout << right << setw(65) << "by: huyndungg && hoangkhangg ";
+}
+
+void drawBackground(int x, int y)
+{
+    gotoxy(100, 100);
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(hConsole, 12);
+    cout << R"(   
+                 
+                                                                          %%%%%                                    
+                                                                     &&***(((((//@                                
+                                                                    /*///(((&(((((%                               
+                                                                   %((((((&&% (&%((@                              
+                                                                   #&/((((((%#(%%((&@@          (*   (            
+                                                                   &*(((((((&/(&&((&@@            (** *(          
+                                                                  %/(((((((((((((%&&@@            (((***((        
+                                                                   @&&&&&&%%% &&&&&@       &    (  ((((***(     
+                                                                  &&    @@@@%%%&&&&&&&&&(&&/%    ((**(((((*       
+                                                                %%/*(///%*****&&&&&&&&(((((&      (*******(    
+                                                                   %%((%       &&&&&&&&&@@@        ((*&&(((     
+                                                                       %       **&&&&&@              %&&          
+                                                                     &%          &&&&&@           &***&           
+                                                                    &@@          &&&&&&&@     &&&((/*@            
+                                                                  &/(%%        &&(((///&&%%&&&&&(((@@             
+                                                                  %((((%*     *@@((((((&&@@&&&&&,@                
+                                                                   %&&&&&@*****@@&&&&&&&&@@,,@@@                  
+                                                                   &&&&&&&&&@@@@@@&&&&&&@                         
+                                                                && % &%&&@        %(///&&@@                                                                                              
+                                
+)";
+    gotoxy(50, 23);
+    SetConsoleTextAttribute(hConsole, 10);
+    cout << R"(                
+                                        ((( ((        
+                                 %@@@@@@&((((((((((@((      
+                         @(((((((((((((((@(((((((((((       
+                       (((((((((((((((((((((((((((&((       
+        ******@******,#@/(((((*****,((((((((((((((((((      
+       ***************,*************@((((((((((((((((((@    
+      @*******&#######***************((((((((((((((((((((   
+    @*********,###*******************&(((((((((((((((@((((  
+   ** #*/*%#***************@/(*********@((((((((((((((((((( 
+  @  ((*&******&#(******,  ((@((**********((((((((((((((((( 
+  *  ( ********##/******  %((  (#*****/**####(((((((((((((( 
+ **  ((****************    ((((((*********######@(((((((((( 
+ *#********************,&@@****************&#####**@((((((  
+   ***@**********************************************((     
+       **&////////////////@*******&********&**********,     
+        ***(****#@@@#*********#*****************##*****@    
+        @***,@*********************##********(####/*****    
+         /####****************@###*************####*****    
+          ###********    ((((####,********(************&    
+           *********      ( #*#&********    **********,     
+            @   @            (* *****#       @   ,  @    )";
+}
+
+
+void choosePointer(int x, int y, int cursor)
+{
+    gotoxy(40, y + cursor*3 + 1);
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(hConsole, 15);
+    cout << '>';
+ 
 }
 
 void printMenu(int x, int y, int cursor)
@@ -29,45 +95,54 @@ void printMenu(int x, int y, int cursor)
     while (i<4) {
         if (i == cursor) //highlight background
         {
-            cout << left << setw(43) << "";
-            SetConsoleTextAttribute(hConsole, BACKGROUND_RED | BACKGROUND_GREEN | FOREGROUND_RED);
-            cout  << "---------------" << endl;
+            cout << left << setw(42) << "";
+            SetConsoleTextAttribute(hConsole, 14);
+            cout  << "-----------------" << endl;
             SetConsoleTextAttribute(hConsole, 2);
-            cout << left << setw(43) << "";
-            SetConsoleTextAttribute(hConsole, BACKGROUND_RED | BACKGROUND_GREEN | FOREGROUND_RED);
-            cout << MenuList[i++] << endl;
+
+
+            cout << left << setw(39) << "";
+            SetConsoleTextAttribute(hConsole, 14);
+            MenuList[i].insert(1, "  ");
+            MenuList[i].insert(15, "  ");
+            cout  << ">>" << MenuList[i] + "<<" << endl;
+            MenuList[i].erase(1, 2);
+            MenuList[i].erase(14, 2);
             SetConsoleTextAttribute(hConsole, 2);
-            cout << left << setw(43) << "";
-            SetConsoleTextAttribute(hConsole, BACKGROUND_RED | BACKGROUND_GREEN | FOREGROUND_RED);
-            cout  << "---------------" << endl;
+            cout << left << setw(42) << "";
+            SetConsoleTextAttribute(hConsole, 14);
+            cout  << "-----------------" << endl;
         }
         else
         {
-            SetConsoleTextAttribute(hConsole, 10);
+            SetConsoleTextAttribute(hConsole, 11);
             cout << left << setw(43) << "";
-            SetConsoleTextAttribute(hConsole, 10);
-            cout << "---------------" << endl;
+            SetConsoleTextAttribute(hConsole, 11);
+            cout << "--------------- " << endl;
 
             cout << left << setw(43) << "";
-            SetConsoleTextAttribute(hConsole, 10);
-            cout << MenuList[i++] << endl;
+            SetConsoleTextAttribute(hConsole, 11);
+            cout << MenuList[i]+"    " << endl;
 
-            SetConsoleTextAttribute(hConsole, 10);
+
+            SetConsoleTextAttribute(hConsole, 11);
             cout << left << setw(43) << "";
-            SetConsoleTextAttribute(hConsole, 10);
-            cout << "---------------" << endl;
+            SetConsoleTextAttribute(hConsole, 11);
+            cout << "--------------- " << endl;
         }
+        i++;
     }
+   
 }
 
 int MenuChoice() //MOVE UP AND DOWN, RETURN THE CHOICE
 {
     char ch;
     
-    int cursor = -1;
+    int cursor = 0;
 
-    int choice = -1;
-
+    int choice = 0;
+    
     printMenu(0, 10, cursor);
     while (true) 
     {
@@ -87,6 +162,7 @@ int MenuChoice() //MOVE UP AND DOWN, RETURN THE CHOICE
         printMenu(0, 10, cursor);
     }
 }
+
 
 
 

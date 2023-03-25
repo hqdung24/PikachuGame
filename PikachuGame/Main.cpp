@@ -15,6 +15,7 @@ int main()
     {
         system("CLS");
         printBanner();
+        drawBackground(100, 100);
         choice = MenuChoice();
         srand(time(0));
         switch (choice)
