@@ -154,21 +154,18 @@ bool helpFunc(board a, int boardSize, COORD &p1, COORD &p2)
         {
             if (a[i][k].KeyinBox() != '0')
             {
-                for (int n = i; n < boardSize - 1; n++)
+                for (int n = 1; n < boardSize - 1; n++)
                 {
-                    for (int m = k; m < boardSize - 1; m++)
+                    for (int m = 1; m < boardSize - 1; m++)
                     {
-                        if (a[i][k].KeyinBox() == a[n][m].KeyinBox() && (n != i || m != k))
+                        if ((a[i][k].KeyinBox() == a[n][m].KeyinBox()) && (n != i || m != k))
                         {
-                            p1.Y = k;
-                            p1.X = i;
-                            p2.Y = m;
-                            p2.X = n;
+                            p1.Y = i;
+                            p1.X = k;
+                            p2.Y = n;
+                            p2.X = m;
                             if (checkAll(a, p1, p2, boardSize))
-                            {
-                                
                                 return 1;
-                            }
                         }
                     }
                 }
