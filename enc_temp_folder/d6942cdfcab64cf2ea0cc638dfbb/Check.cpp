@@ -93,8 +93,6 @@ int checkL(board a, COORD p1, COORD p2)
     int minY = min(p1.Y, p2.Y);
     if (checkX(a, minY - 1, maxY, minX, minX) && checkY(a, minX - 1, maxX, maxY, maxY))
         return 1;
-    if (checkX(a, minY - 1, maxY, minX, minX) && checkY(a, minX - 1, maxX, minY, minY))
-        return 1;
     if (checkX(a, minY, maxY + 1, maxX, maxX) && checkY(a, minX, maxX + 1, minY, minY))
         return 1;
     if (checkX(a, minY, maxY + 1, maxX, maxX) && checkY(a, minX, maxX + 1, maxY, maxY))

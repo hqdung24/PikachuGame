@@ -209,7 +209,7 @@ void StandardMode1()
 	
 
 	//move cursor in the board
-	while (emptycell < 8*8)
+	while (emptycell < 36)
 	{			
 		fflush(stdin);
 				input = _getch();
@@ -225,6 +225,8 @@ void StandardMode1()
 				{
 						selpos[1].Y = curpos.Y;
 						selpos[1].X = curpos.X;
+
+
 						if (checkAll(newboard, selpos[0], selpos[1],8) == 1 && newboard[selpos[0].Y][selpos[0].X].KeyinBox() == newboard[selpos[1].Y][selpos[1].X].KeyinBox())//khi co thuat toan check I U Z L se thay the dong code nay	
 						{						
 							newboard[selpos[0].Y][selpos[0].X].deBox();

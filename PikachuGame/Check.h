@@ -14,8 +14,8 @@ struct point
 };
 
 void printArray(int a[6][6], int n);
-int checkX(board a, int y1, int y2, int x);
-int checkY(board a, int x1, int x2, int y);
+int checkX(board a, int y1, int y2, int x1, int x2);
+int checkY(board a, int x1, int x2, int y1, int y2);
 
 
 int checkZ(board a, COORD p1, COORD p2);

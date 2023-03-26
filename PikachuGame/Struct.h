@@ -71,7 +71,7 @@ struct cell
     }
     char KeyinBox()
     {
-        return box[2][4];
+       return box[2][4];
     }
 };
 
