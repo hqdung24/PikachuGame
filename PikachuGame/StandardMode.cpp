@@ -2,7 +2,6 @@
 #include <ctime>
 
 
-
 board initialBoard(int ROWS, int COLS)
 {
 	board newboard = new cell* [ROWS];
@@ -241,10 +240,17 @@ void StandardMode1()
 							enterTime = -1;
 						}
 				}
-				
+				//đống này để test cái helpFunc
+				/*COORD p1,p2;
+				helpFunc(newboard,8, p1, p2);
+				cout << endl;
+				cout << "Point 1: " << p1.X << "-" << p1.Y << "Point 2: " << p2.X << "-" << p2.Y;
+				system("pause");*/
 				//if press enter at current cell, the cell will be selected
 				drawTable(curpos, newboard, 8, 8, selpos, enterTime);
-				gotoxy(0, 60); cout << enterTime << endl << emptycell ;
+				gotoxy(0, 60); 
+				cout << enterTime << endl << emptycell << endl;
+
 
 	}
 	cout << "YOU WON.....................";
