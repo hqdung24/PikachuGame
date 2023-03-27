@@ -159,7 +159,8 @@ int MenuChoice() //MOVE UP AND DOWN, RETURN THE CHOICE
         }
         else if (ch == '\r')
         {//enter key
-            playSound(1);
+            playSound(2);
+            Sleep(300);
             return cursor;
         }
         printMenu(0, 10, cursor);
