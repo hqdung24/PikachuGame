@@ -105,7 +105,6 @@ int checkU(board a, COORD p1, COORD p2, int boardSize)
             // kt xem hàng ngang của từng vị trí có trống ko
             if (checkY(a, p1.X, i, p1.Y, p1.Y) && checkY(a, p2.X, i, p2.Y, p2.Y))
                 return 1;
-            
         }
     }
     // kt bên trái
@@ -142,41 +141,6 @@ int checkU(board a, COORD p1, COORD p2, int boardSize)
 
 bool checkAll(board a, COORD p1, COORD p2, int boardSize)
 {
-    return (checkX(a, p1.Y, p2.Y, p1.X, p2.X) || checkY(a, p1.X, p2.X, p1.Y, p2.Y) || checkL(a, p1, p2) || checkZ(a, p1, p2) || checkU(a, p1, p2, 8));
-}
-
-bool helpFunc(board a, int boardSize, COORD &p1, COORD &p2)
-{
-    // tìm kiếm 1 ô giống nhau
-    for (int i = 1; i < boardSize - 1; i++)
-    {
-        for (int k = 1; k < boardSize - 1; k++)
-        {
-            if (a[i][k].KeyinBox() != '0')
-            {
-                for (int n = 1; n < boardSize - 1; n++)
-                {
-                    for (int m = 1; m < boardSize - 1; m++)
-                    {
-                        if ((a[i][k].KeyinBox() == a[n][m].KeyinBox()) && (n != i || m != k))
-                        {
-                            p1.Y = i;
-                            p1.X = k;
-                            p2.Y = n;
-                            p2.X = m;
-                            if (checkAll(a, p1, p2, boardSize))
-                                return 1;
-                        }
-                    }
-                }
-            }
-        }
-    }
-    p1.X = 0;
-    p1.Y = 0;
-    p2.X = 0;
-    p2.Y = 0;
-    cout << endl;
-    cout << "No more steps";
-    return 0;
+        return (checkX(a, p1.Y, p2.Y, p1.X) || checkY(a, p1.X, p2.X, p1.Y) || checkL(a, p1, p2)
+            || checkZ(a, p1, p2) ); 
 }

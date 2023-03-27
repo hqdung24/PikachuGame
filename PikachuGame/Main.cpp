@@ -15,13 +15,16 @@ int main()
     {
         system("CLS");
         printBanner();
-        drawBackground(100, 100);
+        //drawBackground(100, 100);
+        playSound(0);
+
         choice = MenuChoice();
         srand(time(0));
         switch (choice)
         {
         case 0:
         {
+            playSound(-1);
             StandardMode1();
             break;
         }

@@ -1,5 +1,6 @@
-﻿
-#include "Console.h"
+﻿#include "Console.h"
+
+
 //Di chuyển đến tọa độ (x, y) trong console
 void gotoxy(int x, int y)// di chuyen con tro tren console de thuc hien cau lenh in
 {
@@ -9,7 +10,6 @@ void gotoxy(int x, int y)// di chuyen con tro tren console de thuc hien cau lenh
     cord.Y = y;
     SetConsoleCursorPosition(hConsole, cord);
 }
-
 
 //Thay đổi Windows Size
 void SetWindowSize(SHORT width, SHORT height) 
@@ -25,7 +25,6 @@ void SetWindowSize(SHORT width, SHORT height)
     SetConsoleWindowInfo(hStdout, 1, &WindowSize);
 }
 
-
 //Thay đổi Screen Buffer Size
 void SetScreenBufferSize(SHORT width, SHORT height)
 {
@@ -38,14 +37,12 @@ void SetScreenBufferSize(SHORT width, SHORT height)
     SetConsoleScreenBufferSize(hStdout, NewSize);
 }
 
-
 //Vô hiệu hóa thu phóng kích thước cửa sổ
 void DisableResizeWindow()
 {
     HWND hWnd = GetConsoleWindow();
     SetWindowLong(hWnd, GWL_STYLE, GetWindowLong(hWnd, GWL_STYLE) & ~WS_SIZEBOX);
 }
-
 
 //Ẩn hiện thanh cuộn
 void ShowScrollbar(BOOL Show)
@@ -64,7 +61,6 @@ void ShowCur(bool CursorVisibility)
     info.bVisible = false; // set the cursor visibility to false
     SetConsoleCursorInfo(consoleHandle, &info);
 }
-
 
 //Vô hiệu hóa bôi đen text
 void DisableSelection()
@@ -87,16 +83,34 @@ void setAndCenterWindow()
 }
 
 
-
 void ConsoleSetting()
 {
-    SetConsoleTitle(L"PikachuGame.exe");
+    SetConsoleTitle(L"The Matching Game");
 
-    SetWindowSize(80, 60);
-    SetScreenBufferSize(100, 50);
-    //DisableResizeWindow();
+    SetWindowSize(100, 100);
+    SetScreenBufferSize(100, 100);
+    DisableResizeWindow();
     ShowScrollbar(0);
     ShowCur(0);
-    setAndCenterWindow();
     DisableSelection();
+}
+
+
+//-1 turn off background music
+//0 - MenuMusic
+//1 - move
+//2 - Enter
+//3 - ingame Music
+//4 - cell running sound
+//5 - success delete 2 cell
+//6 - fail delete 2 cell
+//7 - winning
+void playSound(int id)
+{
+    if (id==-1)
+    PlaySound(NULL, NULL, SND_FILENAME | SND_ASYNC);
+    else {
+        static vector<const wchar_t*> soundFile{ L"MenuMusic", L"move.wav", L"enter.wav", L"ingameBackground1.wav", L"createBoardSound.wav",  L"SuccessDelete2Cells.wav", L"FailDelete2Cells.wav", L"winningSound.wav" };
+        PlaySound(soundFile[id], NULL, SND_FILENAME | SND_ASYNC);
+    }
 }

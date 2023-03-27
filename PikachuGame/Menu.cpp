@@ -149,14 +149,17 @@ int MenuChoice() //MOVE UP AND DOWN, RETURN THE CHOICE
         ch = _getch();
         if (ch == 72 && cursor != 0) 
         { // up arrow
+            playSound(1);
             cursor--;
         }
         else if (ch == 80 && cursor < 4 - 1) 
         { // down arrow
+            playSound(1);
             cursor++;
         }
         else if (ch == '\r')
         {//enter key
+            playSound(1);
             return cursor;
         }
         printMenu(0, 10, cursor);

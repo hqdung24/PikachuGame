@@ -33,7 +33,7 @@ struct cell
     {
             {" ------- "},
             {"|       |"},
-            {"|       |"},
+            {"|   0   |"},
             {"|       |"},
             {" ------- "}
     };
@@ -90,6 +90,7 @@ struct Record
 struct player
 {
     string name;
+    string id;
     Record rc;
 };
 
