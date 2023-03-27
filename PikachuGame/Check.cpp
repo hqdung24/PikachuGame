@@ -75,18 +75,40 @@ int checkZ(board a, COORD p1, COORD p2)
 
 int checkL(board a, COORD p1, COORD p2)
 {
-    int maxX = max(p1.X, p2.X);
-    int minX = min(p1.X, p2.X);
-    int maxY = max(p1.Y, p2.Y);
-    int minY = min(p1.Y, p2.Y);
-    if (checkX(a, minY - 1, maxY, minX, minX) && checkY(a, minX - 1, maxX, maxY, maxY))
-        return 1;
-    if (checkX(a, minY - 1, maxY, minX, minX) && checkY(a, minX - 1, maxX, minY, minY))
-        return 1;
-    if (checkX(a, minY, maxY + 1, maxX, maxX) && checkY(a, minX, maxX + 1, minY, minY))
-        return 1;
-    if (checkX(a, minY, maxY + 1, maxX, maxX) && checkY(a, minX, maxX + 1, maxY, maxY))
-        return 1;
+    if (p1.Y > p2.Y)
+    {
+        if (p1.X > p2.X)
+        {
+            if (checkX(a, p2.Y - 1, p1.Y, p1.X, p1.X) && checkY(a, p2.X, p1.X + 1, p2.Y, p2.Y))
+                return 1;
+            if (checkX(a, p2.Y, p1.Y + 1, p2.X, p2.X) && checkY(a, p2.X - 1, p1.X, p1.Y, p1.Y))
+                return 1;
+        }
+        if (p1.X < p2.X)
+        {
+            if (checkX(a, p2.Y - 1, p1.Y, p1.X, p1.X) && checkY(a, p1.X - 1, p2.X, p2.Y, p2.Y))
+                return 1;
+            if (checkX(a, p2.Y, p1.Y + 1, p2.X, p2.X) && checkY(a, p1.X, p2.X + 1, p1.Y, p1.Y))
+                return 1;
+        }
+    }
+    if (p1.Y < p2.Y)
+    {
+        if (p1.X > p2.X)
+        {
+            if (checkX(a, p1.Y, p2.Y + 1, p1.X, p1.X) && checkY(a, p2.X, p1.X + 1, p2.Y, p2.Y))
+                return 1;
+            if (checkX(a, p1.Y - 1, p2.Y, p2.X, p2.X) && checkY(a, p2.X - 1, p1.X, p1.Y, p1.Y))
+                return 1;
+        }
+        if (p1.X < p2.X)
+        {
+            if (checkX(a, p1.Y, p2.Y + 1, p1.X, p1.X) && checkY(a, p1.Y - 1, p2.Y, p2.Y, p2.Y))
+                return 1;
+            if (checkX(a, p1.Y - 1, p2.Y, p2.X, p2.X) && checkY(a, p1.Y, p2.Y + 1, p1.Y, p1.Y))
+                return 1;
+        }
+    }
     return 0;
 }
 
