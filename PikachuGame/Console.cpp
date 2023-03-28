@@ -87,8 +87,9 @@ void ConsoleSetting()
 {
     SetConsoleTitle(L"The Matching Game");
 
-    SetWindowSize(100, 100);
-    SetScreenBufferSize(100, 100);
+    SetWindowSize(100, 40);
+    SetScreenBufferSize(100, 40);
+    //setAndCenterWindow();
     DisableResizeWindow();
     ShowScrollbar(0);
     ShowCur(0);

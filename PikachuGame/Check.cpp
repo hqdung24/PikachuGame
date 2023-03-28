@@ -202,3 +202,4 @@ bool helpFunc(board a, int boardSize, COORD& p1, COORD& p2)
     cout << "No more steps";
     return 0;
 }
+

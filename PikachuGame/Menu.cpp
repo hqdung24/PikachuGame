@@ -97,7 +97,9 @@ void printMenu(int x, int y, int cursor)
         {
             cout << left << setw(42) << "";
             SetConsoleTextAttribute(hConsole, 14);
-            cout  << "-----------------" << endl;
+            for (int i = 0; i < 17; i++)
+            cout << (char)VerticalDash;
+            cout << endl;
             SetConsoleTextAttribute(hConsole, 2);
 
 
@@ -111,14 +113,19 @@ void printMenu(int x, int y, int cursor)
             SetConsoleTextAttribute(hConsole, 2);
             cout << left << setw(42) << "";
             SetConsoleTextAttribute(hConsole, 14);
-            cout  << "-----------------" << endl;
+            for (int i = 0; i < 17; i++)
+            cout << (char)VerticalDash;
+            cout << endl;
         }
         else
         {
             SetConsoleTextAttribute(hConsole, 11);
             cout << left << setw(43) << "";
             SetConsoleTextAttribute(hConsole, 11);
-            cout << "--------------- " << endl;
+            for (int i = 0; i < 15; i++)
+            cout << (char)VerticalDash;
+            cout << " ";
+            cout << endl;
 
             cout << left << setw(43) << "";
             SetConsoleTextAttribute(hConsole, 11);
@@ -128,7 +135,10 @@ void printMenu(int x, int y, int cursor)
             SetConsoleTextAttribute(hConsole, 11);
             cout << left << setw(43) << "";
             SetConsoleTextAttribute(hConsole, 11);
-            cout << "--------------- " << endl;
+            for (int i = 0; i < 15; i++)
+            cout << (char)VerticalDash;
+            cout << " ";
+            cout << endl;
         }
         i++;
     }

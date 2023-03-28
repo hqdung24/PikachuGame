@@ -10,6 +10,10 @@ board initialBoard(int ROWS, int COLS)
 	for (int i = 0; i < ROWS; i++)
 	{
 		newboard[i] = new cell[COLS];
+		for (int j = 0; j < COLS; j++)
+		{
+			newboard[i][j].renderbox();
+		}
 	}
 	
 	return newboard;
@@ -30,12 +34,10 @@ void drawBox(char cell[5][10], int row, int col) //row, col of the board
 	
 	for (int i = 0; i < 5; i++) 
 	{
-		gotoxy(6 + col * 10, row * 5 + i); // X LA COT, Y LA HANG
+		gotoxy(6+ + col * 10, row * 5 + i); // X LA COT, Y LA HANG
 		cout << cell[i] << endl;
 	}
 }
-
-
 
 void setMargin(board board, int ROWS, int COLS) //draw the margin of the board
 {
@@ -66,14 +68,12 @@ void drawBoardAtStart(board cur, int ROWS, int COLS)
 	int h2 = ROWS - 2;
 	int c1 = 1;
 	int c2 = COLS - 2;
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	Sleep(200);
-	//gameBackground(10, 5);
+	gameBackground(10, 5);
 	while (h1 <= h2 && c1 <= c2)
 	{
 		for (int i = c1; i <= c2; i++)
 		{
-			
 			playSound(4);
 			SetConsoleTextAttribute(hConsole, BACKGROUND_GREEN|BACKGROUND_BLUE|FOREGROUND_GREEN|FOREGROUND_BLUE);
 			drawBox(cur[h1][i].box, h1, i);
@@ -135,13 +135,13 @@ void drawBoardAtStart(board cur, int ROWS, int COLS)
 
 void drawTable(COORD cursor, board curboard, int ROWS, int COLS)
 {
-	system("CLS");
+	
 	int i = 0;
 	static int s = 0;
 	int emptycell = 0;
 	// loop through each cell in the table
-	for (int row = 0; row < ROWS; row++) {
-		for (int col = 0; col < COLS ; col++) {
+	for (int row = 1; row < ROWS-1 ; row++) {
+		for (int col = 1; col < COLS-1   ; col++) {
 			if (row == cursor.Y && col == cursor.X) //ô đang chứa cursor
 			{
 				if (curboard[row][col].isSelected)
@@ -168,6 +168,7 @@ void drawTable(COORD cursor, board curboard, int ROWS, int COLS)
 			}
 
 			// print the cell contents
+
 				drawBox(curboard[row][col].box, row, col);
 			
 		}
@@ -265,8 +266,9 @@ void StandardMode1()
 
 	//initial a board
 	system("CLS");
-	//setMargin(newboard, 8, 8);
+	setMargin(newboard, 8, 8);
 	generateBoard(newboard, 8, 8, 8);
+	//gameBackground(10, 5);
 	drawBoardAtStart(newboard, 8, 8);
 	
 	//move cursor in the board
@@ -311,8 +313,6 @@ void StandardMode1()
 				// system("pause");
 				//if press enter at current cell, the cell will be selected
 				drawTable(curpos, newboard, 8, 8);
-				gotoxy(0, 60); cout << enterTime << endl << emptycell ;
-
 	}
 	releaseBoard(newboard, 8, 8);
 	system("CLS");

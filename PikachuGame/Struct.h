@@ -4,28 +4,7 @@
 
 using namespace std;
 
-#define ldash 151;
-#define lowleftcorn 192; 
-#define uprightcorn 191; 
-#define upleftcorn 217; 
-#define lowrightcorn 192; 
 
-#define BLACK 0
-#define BLUE 1
-#define GREEN 2
-#define AQUA 3
-#define RED 4
-#define PURPLE 5
-#define YELLOW 6
-#define WHITE 7
-#define GRAY 8
-#define LIGHT_BLUE 9
-#define LIGHT_GREEN 10
-#define LIGHT_AQUA 11
-#define LIGHT_RED 12
-#define LIGHT_PURPLE 13
-#define LIGHT_YELLOW 14
-#define BRIGHT_WHITE 15
 
 struct cell
 {
@@ -40,7 +19,7 @@ struct cell
     char key = '0';
     bool isSelected = 0;
 
-    void ldashchange()
+    void renderbox()
     {
        /* box[0][0] = '\u2514';
         box[4][9] = (char)lowrightcorn;
@@ -48,12 +27,25 @@ struct cell
         box[4][0] = (char)lowleftcorn;*/
         for (int i = 1; i < 8; i++)
         {
-            box[0][i] = (char)ldash;
+            box[0][i] = (char)196;
         }
         for (int i = 1; i < 8; i++)
         {
-            box[4][i] = (char)ldash;
+            box[4][i] = (char)196;
         }
+
+        for (int i = 1; i < 4; i++)
+        {
+            box[i][0] = (char)179;
+        }
+        for (int i = 1; i < 4; i++)
+        {
+            box[i][8] = (char)179;
+        }
+        box[0][0] = upleftcorn;
+        box[4][0] = downleftcorn;
+        box[4][8] = downrightcorn
+        box[0][8] = uprightcorn;
     }
 
     void deBox()

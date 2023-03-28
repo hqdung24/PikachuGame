@@ -1,12 +1,11 @@
 ﻿#include <iostream>
-using namespace std;
+#include <queue>
 #include <algorithm>
 #include <Windows.h>
 #include <string>
 #include <vector>
 #include <mmsystem.h>
-string ct;
-
+using namespace std;
 struct point
 {
     int x;
@@ -25,179 +24,10 @@ void printArray(int a[6][6], int n)
     }
 }
 
-int checkX(int a[6][6], int y1, int y2, int X)
-{
-    int maxP = max(y1, y2);
-    int minP = min(y1, y2);
-    // cho y chạy đến khi nào gặp vật cản hoặc tịt đường
-    // return 0 khi ko có đường đi
-    for (int i = minP; i < maxP; i++)
-    {
-        if (a[X][i] != 0)
-            return 0;
-    }
-    // return 1 khi đã kiểm tra đường dọc hợp lệ
-    return 1;
-}
 
-int checkY(int a[6][6], int x1, int x2, int y)
-{
-    int maxP = max(x1, x2);
-    int minP = min(x1, x2);
-    // cho x chạy đến khi nào gặp vật cản hoặc tịt đường
-    // return 0 khi ko có đường đi
-    for (int i = minP + 1; i < maxP; i++)
-    {
-        if (a[i][y] != 0)
-            return 0;
-    }
-    // return 1 khi đã kiểm tra đường ngang hợp lệ
-    return 1;
-}
-
-int checkZ(int a[6][6], COORD p1, COORD p2)
-{
-    int maxX = max(p1.X, p2.X);
-    int minX = min(p1.X, p2.X);
-    int maxY = max(p1.Y, p2.Y);
-    int minY = min(p1.Y, p2.Y);
-
-    for (int i = minX; i < maxX; i++)
-    {
-        // tìm xem có cột hàng dọc nào trống ko
-        if (checkY(a, minY - 1, maxY + 1, i) == 1)
-        {
-            // kt xem hàng ngang của từng vị trí có trống ko
-            if (checkX(a, p1.X, i, p1.Y) == 1 && checkX(a, p2.X, i, p2.Y) == 1)
-                return 1;
-        }
-    }
-
-    for (int i = minY; i < maxY; i++)
-    {
-        // tìm xem có cột hàng ngang nào trống ko
-        if (checkY(a, minX - 1, maxX + 1, i) == 1)
-        {
-            // kt xem hàng dọc của từng vị trí có trống ko
-            if (checkX(a, p1.Y, i, p1.X) == 1 && checkX(a, p2.Y, i, p2.X) == 1)
-                return 1;
-        }
-    }
-
-    return 0;
-}
-
-int checkL(int a[6][6], COORD p1, COORD p2)
-{
-    if (checkX(a, p1.Y, p2.Y, max(p1.X, p2.X)) && checkY(a, p1.X, p2.X, max(p1.Y, p2.Y)))
-        return 1;
-    if (checkX(a, p1.Y, p2.Y, min(p1.X, p2.X)) && checkY(a, p1.X, p2.X, min(p1.Y, p2.Y)))
-        return 1;
-    return 0;
-}
-
-int checkU(int a[6][6], COORD p1, COORD p2, int boardSize)
-{
-    int maxX = max(p1.X, p2.X);
-    int minX = min(p1.X, p2.X);
-    int maxY = max(p1.Y, p2.Y);
-    int minY = min(p1.Y, p2.Y);
-    // kt bên phải
-    for (int i = maxX; i < boardSize; i++)
-    {
-        // tìm xem có cột hàng dọc nào trống ko
-        if (checkY(a, minY - 1, maxY + 1, i) == 1)
-        {
-            // kt xem hàng ngang của từng vị trí có trống ko
-            if (checkX(a, p1.X, i, p1.Y) == 1 && checkX(a, p2.X, i, p2.Y) == 1)
-                return 1;
-        }
-    }
-    if (checkX(a, p1.X, boardSize - 1, p1.Y) == 1 && checkX(a, p2.X, boardSize - 1, p2.Y) == 1)
-        return 1;
-    // kt bên trái
-    for (int i = minX; i >= 0; i--)
-    {
-        // tìm xem có cột hàng dọc nào trống ko
-        if (checkY(a, minY - 1, maxY + 1, i) == 1)
-        {
-            // kt xem hàng ngang của từng vị trí có trống ko
-            if (checkX(a, p1.X, i, p1.Y) == 1 && checkX(a, p2.X, i, p2.Y) == 1)
-                return 1;
-        }
-    }
-    if (checkX(a, p1.X, 0, p1.Y) == 1 && checkX(a, p2.X, 0, p2.Y) == 1)
-        return 1;
-    // kt bên dưới
-    for (int i = maxY; i < boardSize; i++)
-    {
-        if (checkX(a, minX - 1, maxX + 1, i) == 1)
-        {
-            if (checkY(a, p1.Y, i, p1.X) == 1 && checkX(a, p2.Y, i, p2.X) == 1)
-                return 1;
-        }
-    }
-    if (checkY(a, p1.Y, boardSize - 1, p1.X) == 1 && checkX(a, p2.Y, boardSize - 1, p2.X) == 1)
-        return 1;
-    // kt bên trên
-    for (int i = maxY; i < boardSize; i++)
-    {
-        if (checkX(a, minX - 1, maxX + 1, i) == 1)
-        {
-            if (checkY(a, p1.Y, i, p1.X) == 1 && checkX(a, p2.Y, i, p2.X) == 1)
-                return 1;
-        }
-    }
-    if (checkY(a, p1.Y, 0, p1.X) == 1 && checkX(a, p2.Y, 0, p2.X) == 1)
-        return 1;
-    return 0;
-}
-bool isValidMove(int a[6][6], COORD p1, COORD p2, int boardSize)
-{
-    return (checkX(a, p1.Y, p2.Y, p1.X) || checkY(a, p1.X, p2.X, p1.Y) || checkL(a, p1, p2) || checkZ(a, p1, p2) || checkU(a, p1, p2, boardSize));
-}
-bool helpFunc(int a[6][6], int boardSize, COORD& p1, COORD& p2)
-{
-    // tìm kiếm 1 ô giống nhau
-    for (int i = 1; i < boardSize - 1; i++)
-    {
-        for (int k = 1; k < boardSize - 1; k++)
-        {
-            if (a[i][k] != 0)
-            {
-                for (int n = i; n < boardSize - 1; n++)
-                {
-                    for (int m = k; m < boardSize - 1; m++)
-                    {
-                        if (a[i][k] == a[n][m])
-                        {
-                            p1.X = i;
-                            p1.Y = k;
-                            p2.X = n;
-                            p2.Y = m;
-                            if (isValidMove(a, p1, p2, boardSize))
-                            {
-                                return 1;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    p1.X = 0;
-    p1.Y = 0;
-    p2.X = 0;
-    p2.Y = 0;
-    return 0;
-}
-
-void generateRandomMatrix(int curboard[6][6], int ROWS, int COLS, int amountpoke)
+void generateRandomMatrix(int curboard[8][8], int ROWS, int COLS, int amountpoke)
 {
     int* typeLimit = new int[8];
-
-   
-
     //min xài để đếm số lượng tối thiểu 1 pokemon sẽ xuất hiện
     int minPoke = (ROWS * COLS) / amountpoke;
     //excess dùng để tính có bao nhiêu pokemon sẽ dc +2 vào số lượng có thể dc xuất hiện
@@ -218,8 +48,8 @@ void generateRandomMatrix(int curboard[6][6], int ROWS, int COLS, int amountpoke
     //khai báo mảng động
 
     //Tạo phần tử ngẫu nhiên
-    for (int i = 0; i < ROWS ; i++) {
-        for (int k = 0; k < COLS ; k++)
+    for (int i = 1; i < ROWS - 1 ; i++) {
+        for (int k = 1; k < COLS - 1 ; k++)
         {
             int random;
             do {
@@ -232,11 +62,12 @@ void generateRandomMatrix(int curboard[6][6], int ROWS, int COLS, int amountpoke
     }
 }
 
-void coutMatrix(int game[6][6], int n)
+void coutMatrix(int game[8][8], int n)
 {
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < n ; i++)
     {
-        for (int k = 0; k < n; k++)
+        cout << "  ";
+        for (int k = 0; k < n ; k++)
         {
             cout << game[i][k] << "  ";
         }
@@ -244,27 +75,125 @@ void coutMatrix(int game[6][6], int n)
     }
 }
 
-//0 - MenuMusic
-//1 - move
-//2 - Enter
-//3 - ingame Music
-//4 - cell running sound
-//5 - success delete 2 cell
-//6 - fail delete 2 cell
-//7 - winning
-void playSound(int i)
+void getNeighbours(vector<COORD> &neighbours, COORD node, int board[8][8])
 {
-    static vector<const wchar_t*> soundFile{ L"MenuMusic", L"move.wav", L"EnterSound.wav", L"ingameBackground1.wav", L"createBoardSound.wav",  L"SuccessDelete2Cells.wav", L"FailDelete2Cells.wav", L"winningSound.wav" };
-    PlaySound(soundFile[i], NULL, SND_FILENAME | SND_ASYNC);
+   
+    COORD nxy[4] = { -1, 0, 1, 0, 0 , 1, 0, -1 };
+    neighbours.clear();
+    for (int i = 0; i < 4; i++)
+    {
+        COORD p;
+        if (board[node.Y + nxy[i].Y][node.X + nxy[i].X] != 3 )
+        {
+            p.Y = node.Y + nxy[i].Y;
+            p.X = node.X + nxy[i].X;
+        }
+        neighbours.push_back(p);
+    }
 }
+
+
+void clearQueue(queue <int> &q)
+{
+    // I want to avoid pop in a loop
+    while (!q.empty())
+    {
+        q.pop();
+    }
+}
+
+COORD intToCOORD(int P, int ROWS, int COLS)
+{
+    COORD result;
+    result.Y = (P % 8 == 0) ? P/8-1 : (P / 8 );
+    result.X = (P % 8 == 0) ? 7 : (P % 8 - 1);
+    return result;
+}
+
+int COORDToint(COORD p, int ROWS, int COLS)
+{
+    return (p.Y) * COLS + p.X + 1;
+}
+
+int* solveBFS(COORD s, COORD e, int board[8][8], int ROWS, int COLS) //s : start cell, e : end cell
+{
+    //xét mảng 2 chiều như mảng 1 chiều
+    int Xs = COORDToint(s, ROWS, COLS);
+    int Xe = COORDToint(s, ROWS, COLS);
+
+    queue<int> q;
+    vector<COORD> neighbours;
+    int* prev = new int[100] {0};
+    int node{NULL};
+    bool visited[64]{false};
+
+
+    q.push(Xs); //enqueue
+    visited[Xs] = true;
+    
+
+    while (!q.empty())
+    {
+        node = q.front();
+        getNeighbours(neighbours, intToCOORD(node, ROWS, COLS), board);
+        q.pop(); 
+
+        //return the first element of the queue and dequeue
+
+
+        for (COORD next : neighbours)
+        {
+            if (!visited[COORDToint(next, ROWS, COLS)])
+            {
+                q.push(COORDToint(next, ROWS, COLS));
+                visited[COORDToint(next, ROWS, COLS)] = true;
+                prev[COORDToint(next, ROWS, COLS)] = node;
+                COORDToint(next, ROWS, COLS)
+            }
+        }
+    }
+    return prev;
+}
+
+vector<int> drawPath(COORD s, COORD e, int board[8][8], int ROWS, int COLS)
+{
+    int* prev = solveBFS(s, e, board, 8, 8);
+    vector<int> path{NULL};
+    for (int at = COORDToint(e,ROWS, COLS); at != NULL; at = prev[at])
+    {
+        path.push_back(at);
+    }
+    reverse(path.begin(), path.end());
+    return path;
+}
+
+//0, 0, 0, 0, 0, 0, 0, 0
+//0, 1, 2, 0, 1, 2, 1, 0
+//0, 2, 1, 0, 1, 2, 1, 0
+//0, 2, 1, 0, 1, 2, 1, 0
+//0, 1, 2, 1, 2, 1, 1, 0
+//0, 1, 2, 1, 2, 1, 1, 0
+//0, 0, 1, 0, 2, 1, 2, 0
 
 int main()
 {
-    int input = 7;
-    
-   
-        Sleep(100);
-        playSound(input);
-        while (true) cout << " ";
+    int curboard[8][8]{
+0, 0, 0, 0, 0, 0, 0, 0,
+0, 3, 1, 3, 2, 1, 2, 0,
+0, 1, 2, 3, 1, 2, 1, 0,
+0, 2, 1, 3, 1, 2, 1, 0,
+0, 1, 2, 1, 2, 1, 1, 0,
+0, 1, 2, 1, 2, 1, 1, 0,
+0, 3, 1, 3, 2, 1, 2, 0,
+0, 0, 0, 0, 0, 0, 0, 0
+    };
+
+    coutMatrix(curboard, 8);
+       int* path = new int[100];
+    COORD s = { 1, 1 };
+    COORD e = { 4, 1 };
+    path = solveBFS(s, e, curboard, 8, 8);
+    for (int i = 0; i < 100; i++)
+        cout << path[i];
     return 0;
 }
