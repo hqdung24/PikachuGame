@@ -74,10 +74,10 @@ void drawSubTable(int x, int y, int width, int length, int score)
 	drawRectangle(x - 4, y, width + 8, length * 3, WHITE);
 	y++;
 	printText(" <SHORTCUTS>", x + 3, y++, LIGHT_RED);
-	printText("S : SURRENDER", x - 2, y++, LIGHT_GREEN);
-	printText("H : GET A MOVE SUGGESTION", x - 2, y++, LIGHT_AQUA);
+	printText("F : SURRENDER", x - 2, y++, LIGHT_GREEN);
+	printText("Q : GET A MOVE SUGGESTION", x - 2, y++, LIGHT_AQUA);
 	printText("L : VIEW LEADERBOARD", x - 2, y++, LIGHT_YELLOW);
-	printText("M : TURN OFF MUSIC", x - 2, y++, LIGHT_PURPLE);
+	printText("O : TURN OFF MUSIC", x - 2, y++, LIGHT_PURPLE);
 	printText("R : READ RULE OF GAME", x - 2, y++, YELLOW);
 }
 
@@ -135,43 +135,44 @@ void drawBoardAtStart(board cur, int ROWS, int COLS)
 	int h2 = ROWS - 2;
 	int c1 = 1;
 	int c2 = COLS - 2;
-	Sleep(200);
-	gameBackground(10, 5);
+	//Sleep(200);
+	//gameBackground(10, 5);
 	while (h1 <= h2 && c1 <= c2)
 	{
 		for (int i = c1; i <= c2; i++)
 		{
-			playSound(4);
+			
 			SetConsoleTextAttribute(hConsole, BACKGROUND_GREEN|BACKGROUND_BLUE|FOREGROUND_GREEN|FOREGROUND_BLUE);
 			drawBox(cur[h1][i].box, h1, i);
 			Sleep(100);
+			PlaySound(L"createBoardSound", NULL, SND_FILENAME | SND_ASYNC);
 			SetConsoleTextAttribute(hConsole, cur[h1][i].key % 15 + 1);
 		    drawBox(cur[h1][i].box, h1, i);
 		}
 		h1++;
 		for (int i = h1; i <= h2; i++)
 		{
-			playSound(4);
+			
 			SetConsoleTextAttribute(hConsole, BACKGROUND_GREEN | BACKGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_BLUE);
 			drawBox(cur[i][c2].box, i, c2);
 			Sleep(100); 
-
+			PlaySound(L"createBoardSound", NULL, SND_FILENAME | SND_ASYNC);
 			SetConsoleTextAttribute(hConsole, cur[i][c2].key % 15 + 1);
-		   drawBox(cur[i][c2].box, i, c2);
+		    drawBox(cur[i][c2].box, i, c2);
 		}
 		c2--;
 		if (c1 <= c2)
 		{
 			for (int i = c2; i >= c1; i--)
 			{
-				playSound(4);
-				SetConsoleTextAttribute(hConsole, BACKGROUND_GREEN | BACKGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_BLUE);
-				drawBox(cur[h2][i].box, h2, i);
+				
+			SetConsoleTextAttribute(hConsole, BACKGROUND_GREEN | BACKGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_BLUE);
+			drawBox(cur[h2][i].box, h2, i);
 
-				Sleep(100); 
-
-				SetConsoleTextAttribute(hConsole, cur[h2][i].key % 15 + 1);
-				 drawBox(cur[h2][i].box, h2, i);
+			Sleep(100); 
+			PlaySound(L"createBoardSound", NULL, SND_FILENAME | SND_ASYNC);
+			SetConsoleTextAttribute(hConsole, cur[h2][i].key % 15 + 1);
+			drawBox(cur[h2][i].box, h2, i);
 			}
 			h2--;
 		}
@@ -179,13 +180,13 @@ void drawBoardAtStart(board cur, int ROWS, int COLS)
 		{
 			for (int i = h2; i >= h1; i--)
 			{
-				playSound(4);
-				SetConsoleTextAttribute(hConsole, BACKGROUND_GREEN | BACKGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_BLUE);
-				drawBox(cur[i][c1].box, i, c1);
-				Sleep(100); 
-
-				SetConsoleTextAttribute(hConsole, cur[i][c1].key % 15 + 1);
-				drawBox(cur[i][c1].box, i, c1);
+				
+			SetConsoleTextAttribute(hConsole, BACKGROUND_GREEN | BACKGROUND_BLUE | FOREGROUND_GREEN | FOREGROUND_BLUE);
+			drawBox(cur[i][c1].box, i, c1);
+			Sleep(100); 
+			PlaySound(L"createBoardSound", NULL, SND_FILENAME | SND_ASYNC);
+			SetConsoleTextAttribute(hConsole, cur[i][c1].key % 15 + 1);
+			drawBox(cur[i][c1].box, i, c1);
 			}
 			c1++;
 		}
@@ -200,7 +201,7 @@ void drawBoardAtStart(board cur, int ROWS, int COLS)
 	}*/
 }
 
-void drawNotiTable(int x, int y, int width, int length, COORD cursor, COORD helpp[2], char input)
+void drawNotiTable(int x, int y, int width, int length, string outputline1, string outputline2, string outputline3)
 {
 	drawRectangle(x - 5, y, width + 10, length * 3 + 5, LIGHT_BLUE);
 	drawRectangle(x, y + 1, width, length, WHITE);
@@ -209,36 +210,37 @@ void drawNotiTable(int x, int y, int width, int length, COORD cursor, COORD help
 
 	drawRectangle(x - 4, y, width + 8, length * 3, WHITE);
 	y++;
+	for (int j = 0; j < 6; j++)
+	{
+		SetConsoleTextAttribute(hConsole, 0);
+		gotoxy(x - 3, y + j); cout << "cccccccccccccccccccccccccc";
+	}
+		printText(outputline1, x-2, y + 2, LIGHT_YELLOW);
+		printText(outputline2, x-2, y + 3, LIGHT_YELLOW);
+		printText(outputline3, x-2, y + 4, LIGHT_YELLOW);
 	
-	printText(" YOU ARE AT CELL ", x-2 , y, LIGHT_YELLOW);
-	gotoxy(x + 15, y++); cout << "[" << cursor.Y << "]" << "[" << cursor.X << "]";
-	/*printText("S : SURRENDER", x - 2, y++, LIGHT_GREEN);
-	printText("H : GET A MOVE SUGGESTION", x - 2, y++, LIGHT_AQUA);*/
-	/*printText("L : VIEW LEADERBOARD", x - 2, y++, LIGHT_YELLOW);
-	printText("M : TURN OFF MUSIC", x - 2, y++, LIGHT_PURPLE);
-	printText("R : READ RULE OF GAME", x - 2, y++, YELLOW);*/
 }
 
 void getPosition(char input, COORD& CurPos, int ROWS, int COLS) //get coordinates of the cell and return
 {
 	if (input == 72 && CurPos.Y !=1) 
 	{ // up arrow
-		playSound(1);
+		playSound(1, 1);
 		CurPos.Y--;
 	}
 	else if (input == 80 && CurPos.Y < ROWS - 2) 
 	{ // down arrow
-		playSound(1);
+		playSound(1, 1);
 		CurPos.Y++;
 	}
 	else if (input == 75 && CurPos.X != 1) 
 	{ // left arrow
-		playSound(1);
+		playSound(1, 1);
 		CurPos.X--;
 	}
 	else if (input == 77 && CurPos.X < COLS - 2) 
 	{ // right arrow
-		playSound(1);
+		playSound(1, 1);
 		CurPos.X++;
 	}
 	else
@@ -313,7 +315,7 @@ void generateBoard(board& curboard, int ROWS, int COLS, int amountpoke)
 	}
 
 	int type[8] = { 1, 2, 3, 4, 5, 6, 7, 8 };
-	int countType[8] = { 0, 0, 0, 0, 0, 0, 0,0 };
+	int countType[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 	//khai báo mảng động
 
 	//Tạo phần tử ngẫu nhiên
@@ -332,102 +334,165 @@ void generateBoard(board& curboard, int ROWS, int COLS, int amountpoke)
 	}
 }
  
-
-
-void StandardMode1()
+void StandardMode1(int ROWS, int COLS)
 {
 	int enterTime = -1; //so lan an enter
-	int emptycell = 8*8 - 6*6;
-	char input;
+	int emptycell = 0; //không tính các ô trống ở viền
+	char input = '0';
 	int score = 0;
+	int i = 1;
 
 	COORD curpos{ 3, 4 };//vị trí của con trỏ trên bảng
 	COORD selpos[2]{ -1,-1};//vị trí của 2 con trỏ được chọn để nối với nhau
 	COORD helppos[2]{ -1,-1, -1, -1 }; //vị trí của 2 ô được gợi ý 
-	board newboard = initialBoard(8, 8);
+	COORD temppos[2]{ -1,-1,-1,-1 };
+	board newboard = initialBoard(ROWS, COLS);
 
 	
 	system("CLS");
 	//setMargin(newboard, 8, 8);
 
 	//initial a board
-	generateBoard(newboard, 8, 8, 8);
+	generateBoard(newboard, ROWS, COLS, 8);
+	drawRectangle(8, 4, 10 * (COLS - 2) + 3, 2 + 5 * (ROWS - 2), WHITE);
+	drawBoardAtStart(newboard, ROWS, COLS);
+	//drawTable(curpos, helppos, newboard, ROWS, COLS);
+	drawSubTable(86, 5, 20, 3, score);//cập nhật điểm
+	drawNotiTable(86, 21, 20, 3," ", "  HOPE YOU HAVE FUN :3", " ");//cập nhật các thông báo ở bảng noti
 
-	
-	//drawBoardAtStart(newboard, 8, 8);
-	drawSubTable(86, 5, 20, 3, score);
-	drawTable(curpos, helppos, newboard, 8, 8);
-	drawRectangle(8, 4, 63, 32, WHITE);
-
+	playSound(3, 1);
 	//move cursor in the board/
-	while (emptycell < 8*8)
-	{			
-		drawSubTable(86, 5, 20, 3, score);
-		drawNotiTable(86, 21, 20, 3, curpos, helppos, 'o');
+	while (emptycell < 36)
+	{
 		fflush(stdin);
-
 		
-
-		input = _getch();//nhận lệnh từ bàn phím
-
-		if (input == 'm') //kiểm tra có còn đường đi hay không
+		if (!helpFunc(newboard, ROWS, temppos[0], temppos[1])) //check xem có bị kẹt đường hay không, nếu có thì tráo lại bảng giữ nguyên vị trí
 		{
-			shuffle(newboard, 8);
-
+			shuffle2(newboard, ROWS);
+			drawTable(curpos, helppos, newboard, ROWS, COLS);
 		}
-		getPosition(input, curpos, 8, 8);//xu ly khi an phim mui ten de di chuyen
-		enterTime += selectCell(input, curpos, newboard);
-		if (enterTime == 0 && newboard[curpos.Y][curpos.X].isSelected == 1)//xu ly khi an enter lan 1
+
+		drawSubTable(86, 5, 20, 3, score);//cập nhật điểm
+		drawTable(curpos, helppos, newboard, ROWS, COLS);
+		input = _getch();//nhận lệnh từ bàn phím
+		enterTime += selectCell(input, curpos, newboard);//đếm số lần enter
+		// turn on/off music
+		if (input == 'o' || input == 'O')//xu ly khi an bat/ tat nhac
 		{
-			playSound(2);
-			selpos[0].Y = curpos.Y;
-			selpos[0].X = curpos.X;
+			i = i*-1;
+			playSound(3, i);
+			string t = (i == 1) ? "    MUSIC IS NOW ON" : "    MUSIC IS NOW OFF";
+			drawNotiTable(86, 21, 20, 3, " ", t, " ");//cập nhật các thông báo ở bảng noti
+		}
+		else if (input == 72 || input == 75 || input == 77 || input == 80) //xu ly khi an phim mui ten de di chuyen
+		{
+			getPosition(input, curpos, ROWS, COLS);
+			string line1;
+			string line2;
+			line1 = " YOU ARE AT ";
+			line2 = "CELL[]|[]";
+			line2.insert(5, to_string(curpos.Y));
+			line2.insert(9, to_string(curpos.X));
+			drawNotiTable(86, 21, 20, 3, " ", line1 + line2, " ");//cập nhật các thông báo ở bảng noti
+		}
+		else if (enterTime == 0 && newboard[curpos.Y][curpos.X].isSelected == 1)//xu ly khi an enter lan 1
+		{
+			if(input=='\r')
+			playSound(2, 1);
+			selpos[0].Y = curpos.Y; 
+			selpos[0].X = curpos.X; 
+			string line1;
+			string line2;
+			line1 = "   YOU ARE SELECTING";
+			line2 = "CELL[][]";
+			line2.insert(5, to_string(curpos.Y));
+			line2.insert(8, to_string(curpos.X));
+			line2 = "      " + line2;
+			drawNotiTable(86, 21, 20, 3, line1 ,line2, " ");//cập nhật các thông báo ở bảng noti
 		}
 		else if (enterTime == 1) //xu ly khi an enter lan 2
 		{
 			selpos[1].Y = curpos.Y;
 			selpos[1].X = curpos.X;
+			enterTime = -1;
+			//string line1;
+			//string line2;
+			//line1 = "   YOU ARE SELECTING";
+			//line2 = "CELL[][]";
+			//line2.insert(5, to_string(curpos.Y));
+			//line2.insert(8, to_string(curpos.X));
+			//line2 = "      " + line2;
+			//drawNotiTable(86, 21, 20, 3, line1, line2, " ");//cập nhật các thông báo ở bảng noti
 			if (checkAll(newboard, selpos[0], selpos[1], 8) == 1 && newboard[selpos[0].Y][selpos[0].X].KeyinBox() == newboard[selpos[1].Y][selpos[1].X].KeyinBox())//khi co thuat toan check I U Z L se thay the dong code nay	
 			{
-				playSound(2);
+				playSound(2, 1);
 				newboard[selpos[0].Y][selpos[0].X].deBox();
 				newboard[selpos[1].Y][selpos[1].X].deBox();
+				string line1 = "        GREAT!!!";
+				string line2 = "YOU HAVE GOT 2 POINTS !!!";
+				drawNotiTable(86, 21, 20, 3, line1, line2, " ");//cập nhật các thông báo ở bảng noti
 				emptycell += 2;
-				enterTime = -1;
 				score += 2;
 			}
 			else
 			{
-				playSound(6);
+				playSound(6, 1);
 				newboard[selpos[0].Y][selpos[0].X].select();
 				newboard[selpos[1].Y][selpos[1].X].select();
 				enterTime = -1;
+				string line1 = " OOPS! INVALID MATCHING";
+				string line2 = "   PLEASE TRY AGAIN ^^";
+				drawNotiTable(86, 21, 20, 3, line1, line2, " ");//cập nhật các thông báo ở bảng noti
 			}
 		}
-
-		if (input == 'h')
+		else if (input == 'q' || input =='Q') //xu ly khi chon chuc nang move suggestion
 		{
-			playSound(1);
+			playSound(1, 1);
 			helpFunc(newboard, 8, helppos[0], helppos[1]);
 			drawTable(curpos, helppos, newboard, 8, 8);
-			/*gotoxy(0, 41);
-			cout << helppos[0].Y << " " << helppos[0].X<< helppos[1].Y << " " << helppos[1].X;*/
 			Sleep(500);
 			//reset suggestion position
+			temppos[0] = helppos[0];
+			temppos[1] = helppos[1];
 			helppos[0] = { -1, -1 };
 			helppos[1] = { -1, -1 };
-			drawTable(curpos, helppos, newboard, 8, 8);
-		}else
-		//reset suggestion position
-		//helppos[0] = { -1, -1 };
-		//helppos[1] = { -1, -1 };
-		drawTable(curpos, helppos, newboard, 8, 8);
-		
+			drawTable(curpos, helppos, newboard, ROWS, COLS);
+			emptycell += 2;
+			enterTime = -1;
+			string line1;
+			string line2;
+			string line3;
+			line1 = " USING MOVE SUGGESTION";
+			line2 = " [][]";
+			line2.insert(2, to_string(temppos[0].Y));
+			line2.insert(5, to_string(temppos[0].X));
+			line3 = "[][]";
+			line3.insert(1, to_string(temppos[1].Y));
+			line3.insert(4, to_string(temppos[1].X));
+			line2 += " MATCHES " + line3;
+			drawNotiTable(86, 21, 20, 3, line1, line2, " ");//cập nhật các thông báo ở bảng noti
+		}
+		drawTable(curpos, helppos, newboard, ROWS, COLS);
 	}
-	system("CLS");
-	playSound(7);
-	gotoxy(10, 5);
-	cout << "YOU WON.....................";
-	Sleep(3000);
+	playSound(3, -1);
+	playSound(7, 1);
+	curpos.Y = 0;
+	curpos.X = 0;
+	drawTable(curpos, helppos, newboard, ROWS, COLS);
+	for (int j = 0; j < 5; j++)
+	{
+		SetConsoleTextAttribute(hConsole, 10 + j);
+		gotoxy(0, 15);
+			cout << R"(
+	 __     __ ____   _    _  __          __ ____   _   _   _  _  
+	 \ \   / // __ \ | |  | | \ \        / // __ \ | \ | | | || |
+	  \ \_/ /| |  | || |  | |  \ \  /\  / /| |  | ||  \| | | || |
+	   \   / | |  | || |  | |   \ \/  \/ / | |  | || . ` | | || |
+	    | |  | |__| || |__| |    \  /\  /  | |__| || |\  | |_||_|
+	    |_|   \____/  \____/      \/  \/    \____/ |_| \_| (_)(_))";
+		drawRectangle(8, 4, 10 * (COLS - 2) + 3, 2 + 5 * (ROWS - 2), 10+j);
+		Sleep(1000);
+	}
+	Sleep(1000);
 	releaseBoard(newboard, 8, 8);
 }

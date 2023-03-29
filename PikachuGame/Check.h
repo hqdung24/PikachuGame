@@ -24,3 +24,4 @@ bool checkAll(board a, COORD p1, COORD p2, int boardSize);
 
 bool helpFunc(board a, int boardSize, COORD& p1, COORD& p2);
 void shuffle(board &a, int boardSize);
+void shuffle2(board& a, int boardSize);

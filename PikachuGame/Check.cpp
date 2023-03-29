@@ -103,9 +103,9 @@ int checkL(board a, COORD p1, COORD p2)
         }
         if (p1.X < p2.X)
         {
-            if (checkX(a, p1.Y, p2.Y + 1, p1.X, p1.X) && checkY(a, p1.Y - 1, p2.Y, p2.Y, p2.Y))
+            if (checkX(a, p1.Y, p2.Y + 1, p1.X, p1.X) && checkY(a, p1.X - 1, p2.X, p2.Y, p2.Y))
                 return 1;
-            if (checkX(a, p1.Y - 1, p2.Y, p2.X, p2.X) && checkY(a, p1.Y, p2.Y + 1, p1.Y, p1.Y))
+            if (checkX(a, p1.Y - 1, p2.Y, p2.X, p2.X) && checkY(a, p1.X, p2.X + 1, p1.Y, p1.Y))
                 return 1;
         }
     }
@@ -203,14 +203,15 @@ bool helpFunc(board a, int boardSize, COORD& p1, COORD& p2)
     return 0;
 }
 
-void shuffle(board &a, int boardSize)
+void shuffle(board& a, int boardSize)
 {
-    COORD p1, p2; // biến rác để cho cái helpFunc
-    //do
-    //{
+    COORD p1, p2; // biến rác cho helpFunc
+    do
+    {
         // tìm những ô còn tồn tại và bỏ vô 1 mảng
         int n = (boardSize - 2) * (boardSize - 2) + 1, len = 0;
         char temp[100];
+        char ka[8][8];
         for (int i = 1; i < boardSize - 1; i++)
         {
             for (int k = 1; k < boardSize - 1; k++)
@@ -221,6 +222,7 @@ void shuffle(board &a, int boardSize)
                     len++;
                     a[i][k].box[2][4] = '0';
                     a[i][k].key = '0';
+                    ka[i][k] = '0';
                 }
             }
         }
@@ -231,10 +233,57 @@ void shuffle(board &a, int boardSize)
             int random2;
             do // lặp đến khi 1 ô được thêm ngẫu nhiên vào 1 vị trí trống
             {
-                 random1 = rand() % (boardSize - 2) + 1, random2 = rand() % (boardSize - 2) + 1; // tạo ngẫu nhiên địa chỉ
-                if (a[random1][random2].KeyinBox() != '0')
-                a[random1][random2].box[2][4] == temp[i];
-            } while (a[random1][random2].KeyinBox() == '0');
+                random1 = rand() % (boardSize - 2) + 1, random2 = rand() % (boardSize - 2) + 1; // tạo ngẫu nhiên địa chỉ
+
+
+            } while (a[random1][random2].KeyinBox() != '0');
+            a[random1][random2].box[2][4] = temp[i];
+            a[random1][random2].key = temp[i];
+            ka[random1][random2] = temp[i];
         }
-    //} while (!helpFunc(a, boardSize, p1, p2));
+    } while (!helpFunc(a, boardSize, p1, p2));
+}
+void shuffle2(board& a, int boardSize)
+{
+    COORD p1, p2; // biến rác cho helpFunc
+    do
+    {
+        // tìm những ô còn tồn tại và bỏ vô 1 mảng
+        int len = 0;
+        char temp[100];
+        COORD b[36]{ 0 };
+        for (int i = 1; i < boardSize - 1; i++)
+        {
+            for (int k = 1; k < boardSize - 1; k++)
+            {
+                if (a[i][k].KeyinBox() != '0') // kt nếu ô không trống thì thêm vào mảng tạm
+                {
+                    temp[len] = a[i][k].KeyinBox();
+                    b[len].Y = i;
+                    b[len].X = k;
+                    len++;
+                }
+            }
+        }
+        //trộn mảng 1 chiều đã lưu
+        int minPosition;
+        int maxPosition = len - 1;
+        int swapPosition;
+        int i = 0;
+        while (i < len - 1)
+        {
+            minPosition = i + 1;
+            swapPosition = rand() % (maxPosition - minPosition + 1) + minPosition;
+
+            swap(temp[i], temp[swapPosition]);
+            i++;
+        }
+
+        // sắp xếp ngẫu nhiên những ô ở trên vào mảng
+        for (int i = 0; i < len; i++)
+        {
+            a[b[i].Y][b[i].X].key = temp[i];
+            a[b[i].Y][b[i].X].box[2][4] = temp[i];
+        }
+    } while (!helpFunc(a, boardSize, p1, p2));
 }

@@ -9,35 +9,34 @@ using namespace std;
 int main()
 {
     ConsoleSetting();
-
     int choice = -1;
     do
     {
         system("CLS");
         printBanner();
         //drawBackground(100, 100);
-        playSound(0);
-
+        playSound(0, 1);
+        
         choice = MenuChoice();
         srand(time(0));
         switch (choice)
         {
         case 0:
         {
-            playSound(-1);
-            StandardMode1();
+            playSound(0, -1);
+            StandardMode1(8, 8);
             break;
         }
         case 1:
         {
             system("CLS");
-            cout << "ACCOUNT INFORMATION HERE";
+            cout << "RULES OF GAME";
             cin.ignore();
             break;
         }
         case 2:
         {
-            cout << "LEADERBOARD HERE";
+            printLeaderBoard();
             cin.ignore();
             break;
         }

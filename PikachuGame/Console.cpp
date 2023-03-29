@@ -78,7 +78,7 @@ void setAndCenterWindow()
     int width = 1100;
     int height = 768;
     int posX = (GetSystemMetrics(SM_CXSCREEN) - width) / 2,
-        posY = (GetSystemMetrics(SM_CYSCREEN) - height) / 2;
+        posY = (GetSystemMetrics(SM_CYSCREEN) - height) /2;
     MoveWindow(consoleWindow, posX, posY, width, height, TRUE);
 }
 
@@ -86,10 +86,9 @@ void setAndCenterWindow()
 void ConsoleSetting()
 {
     SetConsoleTitle(L"The Matching Game");
-
-    SetWindowSize(150, 40);
-    SetScreenBufferSize(150, 40);
-    //setAndCenterWindow();
+    //SetWindowSize(100, 45);
+    //SetScreenBufferSize(150, 45);
+    setAndCenterWindow();
     DisableResizeWindow();
     ShowScrollbar(0);
     ShowCur(0);
@@ -106,12 +105,15 @@ void ConsoleSetting()
 //5 - success delete 2 cell
 //6 - fail delete 2 cell
 //7 - winning
-void playSound(int id)
+void playSound(int id, int toggle) //1 to play, -1 to pause
 {
-    if (id==-1)
-    PlaySound(NULL, NULL, SND_FILENAME | SND_ASYNC);
+    if (toggle == -1)
+    {
+        static vector<const wchar_t*> soundFile1{ L"pause MenuMusic.wav", L"pause move.wav", L"pause enter.wav", L"pause ingameBackground1.wav", L"pause createBoardSound.wav",  L"pause SuccessDelete2Cells.wav", L"pause FailDelete2Cells.wav", L"pause winningSound.wav" };
+        mciSendString(soundFile1[id], NULL, 0, 0);
+    }
     else {
-        static vector<const wchar_t*> soundFile{ L"MenuMusic", L"move.wav", L"enter.wav", L"ingameBackground1.wav", L"createBoardSound.wav",  L"SuccessDelete2Cells.wav", L"FailDelete2Cells.wav", L"winningSound.wav" };
-        PlaySound(soundFile[id], NULL, SND_FILENAME | SND_ASYNC);
+        static vector<const wchar_t*> soundFile2{ L"play MenuMusic.wav", L"play move.wav", L"play enter.wav", L"play ingameBackground1.wav", L"play createBoardSound.wav",  L"play SuccessDelete2Cells.wav", L"play FailDelete2Cells.wav", L"play winningSound.wav" };
+        mciSendString(soundFile2[id], NULL, 0, 0);
     }
 }

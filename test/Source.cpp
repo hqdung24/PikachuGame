@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <mmsystem.h>
+#include <conio.h>
 using namespace std;
 
 #define VerticalDash 179;
@@ -206,26 +207,38 @@ void printText(const string text, int x, int y, int color)
     cout << text;
 }
 
+void drawVerticalLine(int x, int y, int length, int color)
+{
+    
+    for (int i = 0; i < length; i++)
+    {
+        gotoxy(x, y+i);
+        cout << (char)VerticalDash;
+    }
+}
+void drawHorizontalLine(int x, int y, int length, int color)
+{
+    
+    for (int i = 0; i < length; i++)
+    {
+        gotoxy(x+i, y);
+        cout << (char)HorizontalDash;
+    }
+}
+
 void drawRectangle(int x, int y, int width, int length, int color)
 {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(hConsole, color);
-    for (int i = 0; i < length; i++)
-    {
-        for (int j = 0; j < width; j++)
-        {
-            if (i == 0 || i == length - 1)
-            {
-                gotoxy(x+j, y+i);
-                 cout << (char)HorizontalDash;
-            }
-            if (j == 0 || j == width - 1)
-            {
-                gotoxy(x+j, y+i);
-                cout << (char)VerticalDash;
-            }
-        }
-    }
+       
+    //gotoxy(x + j, y + i);
+    drawHorizontalLine(x , y + 0, width , color);
+    drawHorizontalLine(x , y + length - 1, width , color);
+                
+    //gotoxy(x + j, y + i);
+    drawVerticalLine(x + 0, y , length, color);
+    drawVerticalLine(x + width - 1, y , length, color);
+            
     gotoxy(x, y); cout << (char)upleftcorn;
     gotoxy(x + width - 1, y); cout << (char)uprightcorn;
     gotoxy(x + width - 1, y + length - 1); cout << (char)downrightcorn;
@@ -271,7 +284,9 @@ int main()
 0, 3, 1, 3, 2, 1, 2, 0,
 0, 0, 0, 0, 0, 0, 0, 0
     };
-
+    int COLS = 8;
+    int ROWS = 8;
+    drawRectangle(8, 4, 10 * (COLS - 2) + 3, 2 + 5 * (ROWS - 2), WHITE);
    /* coutMatrix(curboard, 8);
        int* path = new int[100];
     COORD s = { 1, 1 };
@@ -284,9 +299,6 @@ int main()
     cout << endl;
     char c;
     cin >> c;*/
-    int i = 1;
-   
-       
+
     
-    return 0;
 }

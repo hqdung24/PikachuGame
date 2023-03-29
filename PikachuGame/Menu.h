@@ -7,9 +7,13 @@
 
 using namespace std; 
 void printBanner();
-void printMenu(int x, int y, int cursor);
+void printMainMenu(int x, int y, int cursor);
+void printLeaderBoard();
 int MenuChoice();
 void drawBackground(int x, int y);
 
 void printText(const string text, int x, int y, int color);
+void drawVerticalLine(int x, int y, int length, int color);
+void drawHorizontalLine(int x, int y, int length, int color);
 void drawRectangle(int x, int y, int width, int length, int color);
+
