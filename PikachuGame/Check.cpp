@@ -203,3 +203,38 @@ bool helpFunc(board a, int boardSize, COORD& p1, COORD& p2)
     return 0;
 }
 
+void shuffle(board &a, int boardSize)
+{
+    COORD p1, p2; // biến rác để cho cái helpFunc
+    //do
+    //{
+        // tìm những ô còn tồn tại và bỏ vô 1 mảng
+        int n = (boardSize - 2) * (boardSize - 2) + 1, len = 0;
+        char temp[100];
+        for (int i = 1; i < boardSize - 1; i++)
+        {
+            for (int k = 1; k < boardSize - 1; k++)
+            {
+                if (a[i][k].KeyinBox() != '0') // kt nếu ô không trống thì thêm vào mảng tạm
+                {
+                    temp[len] = a[i][k].KeyinBox();
+                    len++;
+                    a[i][k].box[2][4] = '0';
+                    a[i][k].key = '0';
+                }
+            }
+        }
+        // sắp xếp ngẫu nhiên những ô ở trên vào mảng
+        for (int i = 0; i < len; i++)
+        {
+            int random1;
+            int random2;
+            do // lặp đến khi 1 ô được thêm ngẫu nhiên vào 1 vị trí trống
+            {
+                 random1 = rand() % (boardSize - 2) + 1, random2 = rand() % (boardSize - 2) + 1; // tạo ngẫu nhiên địa chỉ
+                if (a[random1][random2].KeyinBox() != '0')
+                a[random1][random2].box[2][4] == temp[i];
+            } while (a[random1][random2].KeyinBox() == '0');
+        }
+    //} while (!helpFunc(a, boardSize, p1, p2));
+}

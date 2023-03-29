@@ -42,10 +42,10 @@ struct cell
         {
             box[i][8] = (char)179;
         }
-        box[0][0] = upleftcorn;
-        box[4][0] = downleftcorn;
-        box[4][8] = downrightcorn
-        box[0][8] = uprightcorn;
+        box[0][0] = (char)upleftcorn;
+        box[4][0] = (char)downleftcorn;
+        box[4][8] = (char)downrightcorn
+        box[0][8] = (char)uprightcorn;
     }
 
     void deBox()

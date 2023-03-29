@@ -6,8 +6,8 @@
 #include <vector>
 
 
-#define VerticalDash 196;
-#define HorizontalDash 179
+#define VerticalDash 179;
+#define HorizontalDash 196;
 #define downleftcorn 192; 
 #define uprightcorn 191; 
 #define upleftcorn 218; 

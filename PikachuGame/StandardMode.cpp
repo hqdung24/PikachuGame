@@ -1,6 +1,6 @@
 ﻿#include "StandardMode.h"
-#include <ctime>
-#include <iomanip>
+
+
 HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
 
@@ -34,7 +34,7 @@ void drawBox(char cell[5][10], int row, int col) //row, col of the board
 	
 	for (int i = 0; i < 5; i++) 
 	{
-		gotoxy(6+ + col * 10, row * 5 + i); // X LA COT, Y LA HANG
+		gotoxy( col * 10, row * 5 + i); // X LA COT, Y LA HANG
 		cout << cell[i] << endl;
 	}
 }
@@ -60,6 +60,73 @@ void setMargin(board board, int ROWS, int COLS) //draw the margin of the board
 			}
 		}
 	}
+}
+
+void drawSubTable(int x, int y, int width, int length, int score)
+{
+	//SCORE table
+	drawRectangle(x - 5, y, width + 10, length * 3 + 5, 13);
+	drawRectangle(x, y + 1, width, length, WHITE);
+	printText("SCORE : ", x + 3, y + 2, RED);
+	printText(to_string(score), x + 14, y + 2, GREEN);
+	y += 1 + length; //draw table vertically    
+
+	drawRectangle(x - 4, y, width + 8, length * 3, WHITE);
+	y++;
+	printText(" <SHORTCUTS>", x + 3, y++, LIGHT_RED);
+	printText("S : SURRENDER", x - 2, y++, LIGHT_GREEN);
+	printText("H : GET A MOVE SUGGESTION", x - 2, y++, LIGHT_AQUA);
+	printText("L : VIEW LEADERBOARD", x - 2, y++, LIGHT_YELLOW);
+	printText("M : TURN OFF MUSIC", x - 2, y++, LIGHT_PURPLE);
+	printText("R : READ RULE OF GAME", x - 2, y++, YELLOW);
+}
+
+void drawTable(COORD cursor, COORD helpp[2], board curboard, int ROWS, int COLS)
+{
+
+	int i = 0;
+	static int s = 0;
+	int emptycell = 0;
+	// loop through each cell in the table
+	for (int row = 1; row < ROWS - 1; row++) {
+		for (int col = 1; col < COLS - 1; col++) {
+			if (row == cursor.Y && col == cursor.X) //ô đang chứa cursor
+			{
+				if (curboard[row][col].isSelected)
+					SetConsoleTextAttribute(hConsole, FOREGROUND_RED | BACKGROUND_RED | BACKGROUND_GREEN);	//nếu ô được chọn thì tô vàng
+				else if (curboard[row][col].KeyinBox() == '0') //ô đã xóa vẫn tô xanh chữ xanh để theo dõi con trỏ 
+				{
+					SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE | FOREGROUND_GREEN | BACKGROUND_BLUE | BACKGROUND_GREEN);
+					//drawBox(curboard[row][col].box, row, col);
+				}
+				else //ô chưa xóa tô xanh chữ đỏ 
+					SetConsoleTextAttribute(hConsole, FOREGROUND_RED | BACKGROUND_BLUE | BACKGROUND_GREEN);// tô xanh
+			}
+			else  //các ô còn lại
+			{
+				if (curboard[row][col].isSelected)//nếu ô được chọn
+					SetConsoleTextAttribute(hConsole, FOREGROUND_RED | BACKGROUND_RED | BACKGROUND_GREEN);
+				else if (curboard[row][col].KeyinBox() == '0')
+				{
+					SetConsoleTextAttribute(hConsole, 0);
+				}
+				else
+					SetConsoleTextAttribute(hConsole, curboard[row][col].key % 15 + 1); // others cell are at their base colors
+			}
+			if ((row == helpp[0].Y && col == helpp[0].X) || (row == helpp[1].Y && col == helpp[1].X)) //ô gợi ý
+				SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE | BACKGROUND_BLUE);
+
+			// print the cell contents
+
+			drawBox(curboard[row][col].box, row, col);
+
+		}
+		// move to the next row
+		cout << endl;
+	}
+	//SetConsoleTextAttribute(hConsole, 3);
+	/*cout << endl;
+	cout << "you are at : " << cursor.Y << " - " << cursor.X << " " << s << endl;*/
 }
 
 void drawBoardAtStart(board cur, int ROWS, int COLS)
@@ -133,51 +200,23 @@ void drawBoardAtStart(board cur, int ROWS, int COLS)
 	}*/
 }
 
-void drawTable(COORD cursor, board curboard, int ROWS, int COLS)
+void drawNotiTable(int x, int y, int width, int length, COORD cursor, COORD helpp[2], char input)
 {
+	drawRectangle(x - 5, y, width + 10, length * 3 + 5, LIGHT_BLUE);
+	drawRectangle(x, y + 1, width, length, WHITE);
+	printText("NOTIFICATION", x + 4, y + 2, LIGHT_BLUE);
+	y += 1 + length; //draw table vertically    
+
+	drawRectangle(x - 4, y, width + 8, length * 3, WHITE);
+	y++;
 	
-	int i = 0;
-	static int s = 0;
-	int emptycell = 0;
-	// loop through each cell in the table
-	for (int row = 1; row < ROWS-1 ; row++) {
-		for (int col = 1; col < COLS-1   ; col++) {
-			if (row == cursor.Y && col == cursor.X) //ô đang chứa cursor
-			{
-				if (curboard[row][col].isSelected)
-					SetConsoleTextAttribute(hConsole, FOREGROUND_RED | BACKGROUND_RED | BACKGROUND_GREEN);	//nếu ô được chọn thì tô vàng
-				else if (curboard[row][col].KeyinBox() == '0') //ô đã xóa vẫn tô xanh chữ xanh để theo dõi con trỏ 
-				{
-					SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE | FOREGROUND_GREEN | BACKGROUND_BLUE | BACKGROUND_GREEN);
-					//drawBox(curboard[row][col].box, row, col);
-				}
-				else //ô chưa xóa tô xanh chữ đỏ 
-					SetConsoleTextAttribute(hConsole, FOREGROUND_RED | BACKGROUND_BLUE | BACKGROUND_GREEN);// tô xanh
-			}
-
-			else  //các ô còn lại
-			{
-				if (curboard[row][col].isSelected)//nếu ô được chọn
-					SetConsoleTextAttribute(hConsole, FOREGROUND_RED | BACKGROUND_RED | BACKGROUND_GREEN);
-				else if (curboard[row][col].KeyinBox() == '0') 
-				{
-					SetConsoleTextAttribute(hConsole, 0);
-				}
-				else
-					SetConsoleTextAttribute(hConsole, curboard[row][col].key % 15 + 1); // others cell are at their base colors
-			}
-
-			// print the cell contents
-
-				drawBox(curboard[row][col].box, row, col);
-			
-		}
-		// move to the next row
-		cout << endl;
-	}
-	//SetConsoleTextAttribute(hConsole, 3);
-	/*cout << endl;
-	cout << "you are at : " << cursor.Y << " - " << cursor.X << " " << s << endl;*/
+	printText(" YOU ARE AT CELL ", x-2 , y, LIGHT_YELLOW);
+	gotoxy(x + 15, y++); cout << "[" << cursor.Y << "]" << "[" << cursor.X << "]";
+	/*printText("S : SURRENDER", x - 2, y++, LIGHT_GREEN);
+	printText("H : GET A MOVE SUGGESTION", x - 2, y++, LIGHT_AQUA);*/
+	/*printText("L : VIEW LEADERBOARD", x - 2, y++, LIGHT_YELLOW);
+	printText("M : TURN OFF MUSIC", x - 2, y++, LIGHT_PURPLE);
+	printText("R : READ RULE OF GAME", x - 2, y++, YELLOW);*/
 }
 
 void getPosition(char input, COORD& CurPos, int ROWS, int COLS) //get coordinates of the cell and return
@@ -254,76 +293,6 @@ void gameBackground(int x, int y)
 )";
 }
 
-void StandardMode1()
-{
-	int enterTime = -1; //so lan an enter
-	int emptycell = 8*8 - 6*6;
-	char input;
-
-	COORD curpos{ 3, 4 };//vị trí của con trỏ trên bảng
-	COORD selpos[2]{ 0 };//vị trí của 2 con trỏ được chọn dùng để xóa
-	board newboard = initialBoard(8, 8);
-
-	//initial a board
-	system("CLS");
-	setMargin(newboard, 8, 8);
-	generateBoard(newboard, 8, 8, 8);
-	//gameBackground(10, 5);
-	drawBoardAtStart(newboard, 8, 8);
-	
-	//move cursor in the board
-	while (emptycell < 8*8)
-	{			
-		fflush(stdin);
-				input = _getch();
-				getPosition(input, curpos, 8, 8);//curpos is updated
-				enterTime += selectCell(input, curpos, newboard);
-
-				if (enterTime == 0 && newboard[curpos.Y][curpos.X].isSelected == 1)
-				{
-					playSound(2);
-					selpos[0].Y = curpos.Y;
-					selpos[0].X = curpos.X;
-				}
-				else if (enterTime == 1) //khi co 2 o duoc chon
-				{
-						selpos[1].Y = curpos.Y;
-						selpos[1].X = curpos.X;
-						if (checkAll(newboard, selpos[0], selpos[1], 8) == 1 && newboard[selpos[0].Y][selpos[0].X].KeyinBox() == newboard[selpos[1].Y][selpos[1].X].KeyinBox())//khi co thuat toan check I U Z L se thay the dong code nay	
-						{		
-							playSound(2);
-							newboard[selpos[0].Y][selpos[0].X].deBox();
-							newboard[selpos[1].Y][selpos[1].X].deBox();
-							emptycell += 2;
-							enterTime = -1;	
-						}
-						else 
-						{
-							playSound(6);
-							newboard[selpos[0].Y][selpos[0].X].select();
-							newboard[selpos[1].Y][selpos[1].X].select();
-							enterTime = -1;
-						}
-				}
-				//đống này để test cái helpFunc
-				// COORD p1,p2;
-				// helpFunc(newboard,8, p1, p2);
-				// cout << endl;
-				// cout << "Point 1: " << p1.X << "-" << p1.Y << "Point 2: " << p2.X << "-" << p2.Y;
-				// system("pause");
-				//if press enter at current cell, the cell will be selected
-				drawTable(curpos, newboard, 8, 8);
-	}
-	releaseBoard(newboard, 8, 8);
-	system("CLS");
-	playSound(7);
-	gotoxy(10, 5);
-	cout << "YOU WON.....................";
-	cin.ignore();
-}
-
-
-
 void generateBoard(board& curboard, int ROWS, int COLS, int amountpoke)
 {
 	int temp = ROWS - 2;
@@ -365,3 +334,100 @@ void generateBoard(board& curboard, int ROWS, int COLS, int amountpoke)
  
 
 
+void StandardMode1()
+{
+	int enterTime = -1; //so lan an enter
+	int emptycell = 8*8 - 6*6;
+	char input;
+	int score = 0;
+
+	COORD curpos{ 3, 4 };//vị trí của con trỏ trên bảng
+	COORD selpos[2]{ -1,-1};//vị trí của 2 con trỏ được chọn để nối với nhau
+	COORD helppos[2]{ -1,-1, -1, -1 }; //vị trí của 2 ô được gợi ý 
+	board newboard = initialBoard(8, 8);
+
+	
+	system("CLS");
+	//setMargin(newboard, 8, 8);
+
+	//initial a board
+	generateBoard(newboard, 8, 8, 8);
+
+	
+	//drawBoardAtStart(newboard, 8, 8);
+	drawSubTable(86, 5, 20, 3, score);
+	drawTable(curpos, helppos, newboard, 8, 8);
+	drawRectangle(8, 4, 63, 32, WHITE);
+
+	//move cursor in the board/
+	while (emptycell < 8*8)
+	{			
+		drawSubTable(86, 5, 20, 3, score);
+		drawNotiTable(86, 21, 20, 3, curpos, helppos, 'o');
+		fflush(stdin);
+
+		
+
+		input = _getch();//nhận lệnh từ bàn phím
+
+		if (input == 'm') //kiểm tra có còn đường đi hay không
+		{
+			shuffle(newboard, 8);
+
+		}
+		getPosition(input, curpos, 8, 8);//xu ly khi an phim mui ten de di chuyen
+		enterTime += selectCell(input, curpos, newboard);
+		if (enterTime == 0 && newboard[curpos.Y][curpos.X].isSelected == 1)//xu ly khi an enter lan 1
+		{
+			playSound(2);
+			selpos[0].Y = curpos.Y;
+			selpos[0].X = curpos.X;
+		}
+		else if (enterTime == 1) //xu ly khi an enter lan 2
+		{
+			selpos[1].Y = curpos.Y;
+			selpos[1].X = curpos.X;
+			if (checkAll(newboard, selpos[0], selpos[1], 8) == 1 && newboard[selpos[0].Y][selpos[0].X].KeyinBox() == newboard[selpos[1].Y][selpos[1].X].KeyinBox())//khi co thuat toan check I U Z L se thay the dong code nay	
+			{
+				playSound(2);
+				newboard[selpos[0].Y][selpos[0].X].deBox();
+				newboard[selpos[1].Y][selpos[1].X].deBox();
+				emptycell += 2;
+				enterTime = -1;
+				score += 2;
+			}
+			else
+			{
+				playSound(6);
+				newboard[selpos[0].Y][selpos[0].X].select();
+				newboard[selpos[1].Y][selpos[1].X].select();
+				enterTime = -1;
+			}
+		}
+
+		if (input == 'h')
+		{
+			playSound(1);
+			helpFunc(newboard, 8, helppos[0], helppos[1]);
+			drawTable(curpos, helppos, newboard, 8, 8);
+			/*gotoxy(0, 41);
+			cout << helppos[0].Y << " " << helppos[0].X<< helppos[1].Y << " " << helppos[1].X;*/
+			Sleep(500);
+			//reset suggestion position
+			helppos[0] = { -1, -1 };
+			helppos[1] = { -1, -1 };
+			drawTable(curpos, helppos, newboard, 8, 8);
+		}else
+		//reset suggestion position
+		//helppos[0] = { -1, -1 };
+		//helppos[1] = { -1, -1 };
+		drawTable(curpos, helppos, newboard, 8, 8);
+		
+	}
+	system("CLS");
+	playSound(7);
+	gotoxy(10, 5);
+	cout << "YOU WON.....................";
+	Sleep(3000);
+	releaseBoard(newboard, 8, 8);
+}

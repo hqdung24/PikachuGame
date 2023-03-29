@@ -6,6 +6,29 @@
 #include <vector>
 #include <mmsystem.h>
 using namespace std;
+
+#define VerticalDash 179;
+#define HorizontalDash 196;
+#define downleftcorn 192; 
+#define uprightcorn 191; 
+#define upleftcorn 218; 
+#define downrightcorn 217; 
+#define BLACK 0
+#define BLUE 1
+#define GREEN 2
+#define AQUA 3
+#define RED 4
+#define PURPLE 5
+#define YELLOW 6
+#define WHITE 7
+#define GRAY 8
+#define LIGHT_BLUE 9
+#define LIGHT_GREEN 10
+#define LIGHT_AQUA 11
+#define LIGHT_RED 12
+#define LIGHT_PURPLE 13
+#define LIGHT_YELLOW 14
+#define BRIGHT_WHITE 15
 struct point
 {
     int x;
@@ -148,7 +171,7 @@ int* solveBFS(COORD s, COORD e, int board[8][8], int ROWS, int COLS) //s : start
                 q.push(COORDToint(next, ROWS, COLS));
                 visited[COORDToint(next, ROWS, COLS)] = true;
                 prev[COORDToint(next, ROWS, COLS)] = node;
-                COORDToint(next, ROWS, COLS)
+                COORDToint(next, ROWS, COLS);
             }
         }
     }
@@ -165,6 +188,67 @@ vector<int> drawPath(COORD s, COORD e, int board[8][8], int ROWS, int COLS)
     }
     reverse(path.begin(), path.end());
     return path;
+}
+void gotoxy(int x, int y)// di chuyen con tro tren console de thuc hien cau lenh in
+{
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD cord;
+    cord.X = x;
+    cord.Y = y;
+    SetConsoleCursorPosition(hConsole, cord);
+}
+
+void printText(const string text, int x, int y, int color)
+{
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(hConsole, color);
+    gotoxy(x, y);
+    cout << text;
+}
+
+void drawRectangle(int x, int y, int width, int length, int color)
+{
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(hConsole, color);
+    for (int i = 0; i < length; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            if (i == 0 || i == length - 1)
+            {
+                gotoxy(x+j, y+i);
+                 cout << (char)HorizontalDash;
+            }
+            if (j == 0 || j == width - 1)
+            {
+                gotoxy(x+j, y+i);
+                cout << (char)VerticalDash;
+            }
+        }
+    }
+    gotoxy(x, y); cout << (char)upleftcorn;
+    gotoxy(x + width - 1, y); cout << (char)uprightcorn;
+    gotoxy(x + width - 1, y + length - 1); cout << (char)downrightcorn;
+    gotoxy(x, y + length - 1); cout << (char)downleftcorn;
+    SetConsoleTextAttribute(hConsole, 7);
+}
+
+void drawSubTable(int x, int y, int width, int length)
+{
+    //SCORE table
+    drawRectangle(x - 5 , y  , width + 10, length * 3 + 5, rand()%15+1);
+    drawRectangle(x, y + 1, width, length , WHITE);
+    printText("SCORE : ", x + 3, y + 2, RED);
+    y +=  1 + length; //draw table vertically    
+   
+    drawRectangle(x - 4, y, width + 8, length*3, WHITE);
+    y++;
+    printText(" <SHORTCUTS>", x + 3 , y++, LIGHT_RED);
+    printText("S : SURRENDER", x - 2, y ++, LIGHT_GREEN);
+    printText("H : GET A MOVE SUGGESTION", x - 2 , y ++, LIGHT_AQUA);
+    printText("L : VIEW LEADERBOARD", x - 2  , y ++, LIGHT_YELLOW);
+    printText("M : TURN OFF MUSIC", x - 2  , y ++, LIGHT_PURPLE);
+    printText("R : READ RULE OF GAME", x - 2  , y ++, YELLOW);
 }
 
 //0, 0, 0, 0, 0, 0, 0, 0
@@ -188,12 +272,21 @@ int main()
 0, 0, 0, 0, 0, 0, 0, 0
     };
 
-    coutMatrix(curboard, 8);
+   /* coutMatrix(curboard, 8);
        int* path = new int[100];
     COORD s = { 1, 1 };
     COORD e = { 4, 1 };
     path = solveBFS(s, e, curboard, 8, 8);
     for (int i = 0; i < 100; i++)
-        cout << path[i];
+        cout << path[i];*/
+    /*drawSubTable(10, 5, 20, 3);
+    
+    cout << endl;
+    char c;
+    cin >> c;*/
+    int i = 1;
+   
+       
+    
     return 0;
 }
