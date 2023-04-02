@@ -49,18 +49,18 @@ void drawdeBox(char cell[5][10], int row, int col) //row, col of the board
 
 void setMargin(board board, int ROWS, int COLS) //draw the margin of the board
 {
-	for (int i = 0; i < 8; i++)
+	for (int i = 0; i < ROWS; i++)
 	{
-		for (int j = 0; j < 8; j++)
+		for (int j = 0; j < COLS; j++)
 		{
-			if (i == 0 || i == 7) 
+			if (i == 0 || i == ROWS - 1) 
 			{
 				board[i][j].box[2][4] = '0';
 				board[i][j].key = '0';
 			}
 			else 
 			{
-				if (j == 0 || j == 7)
+				if (j == 0 || j == COLS - 1)
 				{
 					board[i][j].box[2][4] = '0';
 					board[i][j].key = '0';
@@ -304,24 +304,6 @@ void gameBackground(int x, int y)
 )";
 }
 
-void stateRead(board a, COORD& cursor, int& cols, int& rows, State s[], int numState)
-{
-	int len = 0;
-	numState = 0; //chọn chơi màn lưu nào
-	cursor.X = s[numState].p_;
-	cursor.Y = s[numState].q_;
-	rows = s[numState].p;
-	cols = s[numState].q;
-	for (int i = 1; i < cols - 1; i++)
-	{
-		for (int k = 1; k < rows - 1; k++)
-		{
-			a[i][k].box[2][4] = s[numState].board[len];
-			len++;
-		}
-	}
-}
-
 void generateBoard(board& curboard, int ROWS, int COLS, int amountpoke)
 {
 	int random1, random2, len = 0;
@@ -382,15 +364,15 @@ void StandardMode1(Player curplayer, int ROWS, int COLS)
 	drawNotiTable(86, 21, 20, 3," ", "  HOPE YOU HAVE FUN :3", " ");//cập nhật các thông báo ở bảng noti
 	playSound(3, 1);
 	//move cursor in the board/
-	while (emptycell < (ROWS - 1) * (COLS - 1))
+	while (emptycell < (ROWS - 2) * (COLS - 2))
 	{
 		fflush(stdin);
 		
-		if (!helpFunc(newboard, ROWS, temppos[0], temppos[1])) //check xem có bị kẹt đường hay không, nếu có thì tráo lại bảng giữ nguyên vị trí
-		{
-			shuffle2(newboard, ROWS);
-			drawTable(curpos, helppos, newboard, ROWS, COLS);
-		}
+		//if (!helpFunc(newboard, ROWS, temppos[0], temppos[1])) //check xem có bị kẹt đường hay không, nếu có thì tráo lại bảng giữ nguyên vị trí
+		//{
+		//	shuffle2(newboard, ROWS);
+		//	drawTable(curpos, helppos, newboard, ROWS, COLS);
+		//}
 
 		drawSubTable(86, 5, 20, 3, score);//cập nhật điểm
 		drawTable(curpos, helppos, newboard, ROWS, COLS);
@@ -465,8 +447,8 @@ void StandardMode1(Player curplayer, int ROWS, int COLS)
 		else if (input == 'q' || input =='Q') //xu ly khi chon chuc nang move suggestion
 		{
 			playSound(1, 1);
-			helpFunc(newboard, 8, helppos[0], helppos[1]);
-			drawTable(curpos, helppos, newboard, 8, 8);
+			helpFunc(newboard, ROWS, helppos[0], helppos[1]);
+			drawTable(curpos, helppos, newboard, ROWS, COLS);
 			Sleep(500);
 			//reset suggestion position
 			temppos[0] = helppos[0];

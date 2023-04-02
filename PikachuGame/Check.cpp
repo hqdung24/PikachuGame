@@ -249,7 +249,7 @@ int checkZDraw(board a, COORD p1, COORD p2, int color)
 
                 drawHorizontalLine(min(p1.X, i) * 10 + 5, p1.Y * 5 + 2, abs(i - p1.X) * 10 - 1, color);
                 drawHorizontalLine(min(p2.X, i) * 10 + 5, p2.Y * 5 + 2, abs(i - p2.X) * 10 - 1, color);
-                return 1;
+                return 3;
 
             }
         }
@@ -280,7 +280,7 @@ int checkZDraw(board a, COORD p1, COORD p2, int color)
 
                 drawVerticalLine(p1.X * 10 + 4, min(p1.Y, i) * 5 + 3, abs(i - p1.Y) * 5 - 1, color);
                 drawVerticalLine(p2.X * 10 + 4, min(p2.Y, i) * 5 + 3, abs(i - p2.Y) * 5 - 1, color);
-                return 1;
+                return 3;
 
             }
         }
@@ -301,7 +301,7 @@ int checkLDraw(board a, COORD p1, COORD p2, int color)
                 gotoxy(p1.X * 10 + 4, p2.Y * 5 + 2);
                 cout << (char)uprightcorn;
                 drawHorizontalLine(p2.X * 10 + 5, p2.Y * 5 + 2, abs(p1.X - p2.X) * 10 - 1, color);
-                return 1;
+                return 2;
 
             }
             if (checkX(a, p2.Y, p1.Y + 1, p2.X, p2.X) && checkY(a, p2.X - 1, p1.X, p1.Y, p1.Y))
@@ -310,7 +310,7 @@ int checkLDraw(board a, COORD p1, COORD p2, int color)
                 gotoxy(p2.X * 10 + 4, p1.Y * 5 + 2);
                 cout << (char)downleftcorn;
                 drawHorizontalLine(p2.X * 10 + 5, p1.Y * 5 + 2, abs(p1.X - p2.X) * 10 - 1, color);
-                return 1;
+                return 2;
             }
         }
         if (p1.X < p2.X)
@@ -321,7 +321,7 @@ int checkLDraw(board a, COORD p1, COORD p2, int color)
                 gotoxy(p1.X * 10 + 4, p2.Y * 5 + 2);
                 cout << (char)upleftcorn;
                 drawHorizontalLine(p1.X * 10 + 5, p2.Y * 5 + 2, abs(p2.X - p1.X) * 10 - 1, color);
-                return 1;
+                return 2;
             }
             if (checkX(a, p2.Y, p1.Y + 1, p2.X, p2.X) && checkY(a, p1.X, p2.X + 1, p1.Y, p1.Y))
             {
@@ -329,7 +329,7 @@ int checkLDraw(board a, COORD p1, COORD p2, int color)
                 gotoxy(p2.X * 10 + 4, p1.Y * 5 + 2);
                 cout << (char)downrightcorn;
                 drawHorizontalLine(p1.X * 10 + 5, p1.Y * 5 + 2, abs(p2.X - p1.X) * 10 - 1, color);
-                return 1;
+                return 2;
             }
         }
     }
@@ -342,14 +342,14 @@ int checkLDraw(board a, COORD p1, COORD p2, int color)
                 gotoxy(p1.X * 10 + 4, p2.Y * 5 + 2);
                 cout << (char)downrightcorn;
                 drawHorizontalLine(p2.X * 10 + 5, p2.Y * 5 + 2, abs(p1.X - p2.X) * 10 - 1, color);
-                return 1;
+                return 2;
             }
             if (checkX(a, p1.Y - 1, p2.Y, p2.X, p2.X) && checkY(a, p2.X - 1, p1.X, p1.Y, p1.Y)) {
                 drawVerticalLine(p2.X * 10 + 4, p1.Y * 5 + 3, abs(p2.Y - p1.Y) * 5 - 1, color);
                 gotoxy(p2.X * 10 + 4, p1.Y * 5 + 2);
                 cout << (char)upleftcorn;
                 drawHorizontalLine(p2.X * 10 + 5, p1.Y * 5 + 2, abs(p1.X - p2.X) * 10 - 1, color);
-                return 1;
+                return 2;
 
             }
         }
@@ -360,7 +360,7 @@ int checkLDraw(board a, COORD p1, COORD p2, int color)
                 gotoxy(p1.X * 10 + 4, p2.Y * 5 + 2);
                 cout << (char)downleftcorn;
                 drawHorizontalLine(p1.X * 10 + 5, p2.Y * 5 + 2, abs(p2.X - p1.X) * 10 - 1, color);
-                return 1;
+                return 2;
 
             }
             if (checkX(a, p1.Y - 1, p2.Y, p2.X, p2.X) && checkY(a, p1.X, p2.X + 1, p1.Y, p1.Y)) {
@@ -368,7 +368,7 @@ int checkLDraw(board a, COORD p1, COORD p2, int color)
                 gotoxy(p2.X * 10 + 4, p1.Y * 5 + 2);
                 cout << (char)uprightcorn;
                 drawHorizontalLine(p1.X * 10 + 5, p1.Y * 5 + 2, abs(p2.X - p1.X) * 10 - 1, color);
-                return 1;
+                return 2;
 
             }
         }
@@ -425,7 +425,7 @@ int checkUDraw(board a, COORD p1, COORD p2, int boardSize, int color)
                 cout << (char)downleftcorn;
                 drawHorizontalLine(i * 10 + 5, p1.Y * 5 + 2, abs(p1.X - i) * 10 - 1, color);
                 drawHorizontalLine(i * 10 + 5, p2.Y * 5 + 2, abs(p2.X - i) * 10 - 1, color);
-                return 1;
+                return 2;
 
             }
         }
@@ -445,7 +445,7 @@ int checkUDraw(board a, COORD p1, COORD p2, int boardSize, int color)
                 drawVerticalLine(p1.X * 10 + 4, p1.Y * 5 + 3, abs(i - p1.Y) * 5 - 1, color);
                 //drawVerticalLine(p1.X * 10 + 4, p1.Y * 5 + 3, (i - p1.Y) * 5 - 1, color);
                 drawVerticalLine(p2.X * 10 + 4, p2.Y * 5 + 3, abs(i - p2.Y) * 5 - 1, color);
-                return 1;
+                return 2;
             }
         }
     }
@@ -463,7 +463,7 @@ int checkUDraw(board a, COORD p1, COORD p2, int boardSize, int color)
                 cout << (char)uprightcorn;
                 drawVerticalLine(p1.X * 10 + 4, i * 5 + 3, abs(p1.Y - i) * 5 - 1, color);
                 drawVerticalLine(p2.X * 10 + 4, i * 5 + 3, abs(p2.Y - i) * 5 - 1, color);
-                return 1;
+                return 2;
             }
 
         }
