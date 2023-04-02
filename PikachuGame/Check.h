@@ -4,7 +4,7 @@
 #include <wincon.h>
 #include <conio.h>
 
-typedef cell** board;
+
 using namespace std;
 
 struct point
@@ -23,5 +23,7 @@ int checkU(board a, COORD p1, COORD p2, int boardSize);
 bool checkAll(board a, COORD p1, COORD p2, int boardSize);
 
 bool helpFunc(board a, int boardSize, COORD& p1, COORD& p2);
-void shuffle(board &a, int boardSize);
+void shuffle(board& a, int boardSize);
 void shuffle2(board& a, int boardSize);
+
+bool checkAndDraw(board a, COORD p1, COORD p2, int boardSize, int color);

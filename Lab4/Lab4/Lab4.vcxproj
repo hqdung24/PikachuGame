@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{f39db78f-458f-4009-8ad5-a6f587aefc40}</ProjectGuid>
-    <RootNamespace>PikachuGame</RootNamespace>
+    <ProjectGuid>{b2e2a7a8-0c9a-4d34-9aad-8e8085a8b651}</ProjectGuid>
+    <RootNamespace>Lab4</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -108,7 +108,6 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -128,20 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Check.cpp" />
-    <ClCompile Include="Console.cpp" />
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Menu.cpp" />
-    <ClCompile Include="StandardMode.cpp" />
-    <ClCompile Include="UserData.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Check.h" />
-    <ClInclude Include="Console.h" />
-    <ClInclude Include="Menu.h" />
-    <ClInclude Include="StandardMode.h" />
-    <ClInclude Include="Struct.h" />
-    <ClInclude Include="UserData.h" />
+    <ClCompile Include="FileName.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

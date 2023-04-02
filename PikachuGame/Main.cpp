@@ -4,55 +4,30 @@
 #include "StandardMode.h"
 #include "Console.h"
 #include "Menu.h"
+#include "Struct.h"
 using namespace std;
+Player playerlist[100];
+int n = 1;
+
 
 int main()
 {
+    
+    playerlist[0].name = "haha";
+    playerlist[0].password = "haha";
+    srand(time(0));
     ConsoleSetting();
-    int choice = -1;
-    do
+    int playerindex = -1;
+    while (true)
     {
         system("CLS");
-        printBanner();
-        //drawBackground(100, 100);
-        playSound(0, 1);
-        
-        choice = MenuChoice();
-        srand(time(0));
-        switch (choice)
-        {
-        case 0:
-        {
-            playSound(0, -1);
-            StandardMode1(8, 8);
-            break;
-        }
-        case 1:
-        {
-            system("CLS");
-            cout << "RULES OF GAME";
-            cin.ignore();
-            break;
-        }
-        case 2:
-        {
-            printLeaderBoard();
-            cin.ignore();
-            break;
-        }
-        case 3:
-        {
-            cout << " 3";
-            break;
-        }
-        default:
-        {
-            choice = -1;
-            break;
-        }
-        }
-    } while (choice != 3);
-    
+        //printBanner("");
+        drawBackground(100, 5);
+        //playSound(0, 1);
+        playerindex = StartMenuChoice(playerlist, n);
+        if (playerindex == -1) break;
+        game(playerlist, n, playerindex);
+    }   
 }
 
 

@@ -2,9 +2,6 @@
 #include"Check.h"
 #include "Console.h"
 #include"Menu.h"
-#include <mmsystem.h>
-#include <ctime>
-#include <iomanip>
 
 
 board initialBoard(int ROWS, int COLS);
@@ -19,7 +16,7 @@ void releaseBoard(board board, int ROWS, int COLS);
 void generateBoard(board& curboard, int ROWS, int COLS, int amountpoke);
 void gameBackground(int x, int y);
 
-void StandardMode1(int, int);
+void StandardMode1(Player curplayer, int ROWS, int COLS);
 void drawSubTable(int x, int y, int width, int length, int score);
 
 

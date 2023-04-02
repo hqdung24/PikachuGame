@@ -272,21 +272,47 @@ void drawSubTable(int x, int y, int width, int length)
 //0, 1, 2, 1, 2, 1, 1, 0
 //0, 0, 1, 0, 2, 1, 2, 0
 
+void drawBox(char cell[5][10], int row, int col) //row, col of the board
+{
+    for (int i = 0; i < 5; i++)
+    {
+        gotoxy(col * 10, row * 5 + i); // X LA COT, Y LA HANG
+        cout << cell[i] << endl;
+    }
+}
+void drawdeBox(char cell[5][10], int row, int col) //row, col of the board
+{
+    for (int i = 0; i < 5; i++)
+    {
+        // X LA COT, Y LA HANG
+        for (int j = 0; j < 10; j++)
+        {
+            gotoxy(col * 10, row * 5 + i);
+            cout << "\b";
+        }
+        cout << endl;
+    }
+}
+void ShowCur(bool CursorVisibility)
+{
+    HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_CURSOR_INFO info;
+    GetConsoleCursorInfo(consoleHandle, &info);
+    info.bVisible = false; // set the cursor visibility to false
+    SetConsoleCursorInfo(consoleHandle, &info);
+}
 int main()
 {
-    int curboard[8][8]{
-0, 0, 0, 0, 0, 0, 0, 0,
-0, 3, 1, 3, 2, 1, 2, 0,
-0, 1, 2, 3, 1, 2, 1, 0,
-0, 2, 1, 3, 1, 2, 1, 0,
-0, 1, 2, 1, 2, 1, 1, 0,
-0, 1, 2, 1, 2, 1, 1, 0,
-0, 3, 1, 3, 2, 1, 2, 0,
-0, 0, 0, 0, 0, 0, 0, 0
+    char box[5][10] =
+    {
+            {" ------- "},
+            {"|       |"},
+            {"|   0   |"},
+            {"|       |"},
+            {" ------- "}
     };
-    int COLS = 8;
-    int ROWS = 8;
-    drawRectangle(8, 4, 10 * (COLS - 2) + 3, 2 + 5 * (ROWS - 2), WHITE);
+  
+ 
    /* coutMatrix(curboard, 8);
        int* path = new int[100];
     COORD s = { 1, 1 };
@@ -299,6 +325,8 @@ int main()
     cout << endl;
     char c;
     cin >> c;*/
-
-    
+    ShowCur(1);
+    int c;
+    gotoxy(1, 1);
+    cin >> c;
 }

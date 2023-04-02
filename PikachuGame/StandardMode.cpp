@@ -31,11 +31,19 @@ void releaseBoard(board board, int ROWS, int COLS)
 
 void drawBox(char cell[5][10], int row, int col) //row, col of the board
 {
-	
 	for (int i = 0; i < 5; i++) 
 	{
 		gotoxy( col * 10, row * 5 + i); // X LA COT, Y LA HANG
 		cout << cell[i] << endl;
+	}
+}
+void drawdeBox(char cell[5][10], int row, int col) //row, col of the board
+{
+	for (int i = 0; i < 5; i++)
+	{
+		 // X LA COT, Y LA HANG
+		gotoxy(col * 10, row * 5 + i); // X LA COT, Y LA HANG
+		cout << "         " << endl;
 	}
 }
 
@@ -74,11 +82,23 @@ void drawSubTable(int x, int y, int width, int length, int score)
 	drawRectangle(x - 4, y, width + 8, length * 3, WHITE);
 	y++;
 	printText(" <SHORTCUTS>", x + 3, y++, LIGHT_RED);
-	printText("F : SURRENDER", x - 2, y++, LIGHT_GREEN);
+	printText("F : SAVE GAME AND QUIT", x - 2, y++, LIGHT_GREEN);
 	printText("Q : GET A MOVE SUGGESTION", x - 2, y++, LIGHT_AQUA);
-	printText("L : VIEW LEADERBOARD", x - 2, y++, LIGHT_YELLOW);
+	printText("S : SHUFFLE THE BOARD", x - 2, y++, LIGHT_YELLOW);
 	printText("O : TURN OFF MUSIC", x - 2, y++, LIGHT_PURPLE);
-	printText("R : READ RULE OF GAME", x - 2, y++, YELLOW);
+
+}
+
+void drawDeTable(char cell[5][10], int ROWS, int COLS)
+{
+	for (int row = 1; row < ROWS - 1; row++) 
+	{
+		for (int col = 1; col < COLS - 1; col++)
+		{
+			drawdeBox(cell, row, col);
+		}
+	}
+
 }
 
 void drawTable(COORD cursor, COORD helpp[2], board curboard, int ROWS, int COLS)
@@ -97,7 +117,6 @@ void drawTable(COORD cursor, COORD helpp[2], board curboard, int ROWS, int COLS)
 				else if (curboard[row][col].KeyinBox() == '0') //ô đã xóa vẫn tô xanh chữ xanh để theo dõi con trỏ 
 				{
 					SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE | FOREGROUND_GREEN | BACKGROUND_BLUE | BACKGROUND_GREEN);
-					//drawBox(curboard[row][col].box, row, col);
 				}
 				else //ô chưa xóa tô xanh chữ đỏ 
 					SetConsoleTextAttribute(hConsole, FOREGROUND_RED | BACKGROUND_BLUE | BACKGROUND_GREEN);// tô xanh
@@ -105,7 +124,10 @@ void drawTable(COORD cursor, COORD helpp[2], board curboard, int ROWS, int COLS)
 			else  //các ô còn lại
 			{
 				if (curboard[row][col].isSelected)//nếu ô được chọn
+				{
 					SetConsoleTextAttribute(hConsole, FOREGROUND_RED | BACKGROUND_RED | BACKGROUND_GREEN);
+					drawBox(curboard[row][col].box, row, col);
+				}
 				else if (curboard[row][col].KeyinBox() == '0')
 				{
 					SetConsoleTextAttribute(hConsole, 0);
@@ -117,16 +139,13 @@ void drawTable(COORD cursor, COORD helpp[2], board curboard, int ROWS, int COLS)
 				SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE | BACKGROUND_BLUE);
 
 			// print the cell contents
-
-			drawBox(curboard[row][col].box, row, col);
-
+		
+				drawBox(curboard[row][col].box, row, col);
+			
 		}
 		// move to the next row
 		cout << endl;
 	}
-	//SetConsoleTextAttribute(hConsole, 3);
-	/*cout << endl;
-	cout << "you are at : " << cursor.Y << " - " << cursor.X << " " << s << endl;*/
 }
 
 void drawBoardAtStart(board cur, int ROWS, int COLS)
@@ -264,77 +283,80 @@ void gameBackground(int x, int y)
 	SetConsoleTextAttribute(hConsole, 14);
 	gotoxy(x, y);
 	cout << R"(
-		GGGP5PBBBGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG
-		GBP~^~7YGBBGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG
-		GBG~^^^^~?PBBGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG
-		GGG!^^^~JY!75BBGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG
-		GGGJ^^~PBBBY!7PBBGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG
-		GGGP~^P#BBBBBJ~?GBGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG
-		GGPGY^JBBBBBBBG7!5BGGGGGGGGGGGGGGGGGGGGGGGGGGGGBBBBBBBBBBBB
-		GGGPGY~?GBBBBBBBY~JBBBBBBBBBBBBBBBBBBBGGGGBBBBGP5YYJJJ?JJYY
-		GGGGPG5!!5BBBBBBBP~7GP5YJJJJ?JJJJYY5PGGBBBG5J?7?JY55PPJ~:^^
-		GGGGGPGGY!75BBBBBBG!~?JY55PPPPPP55YJ?77JJ77J5GBBBBBBBB#BY~^
-		GGGGGGPGGPY7!JPBBBBBPBBBBBBBBBBBBBBB#BP!?PBBBBBBBBBBBBBP57~
-		GGGGGGGGPGGGY^!JBBBBBBBBBBBBBBBBBBBB#####BBBBBBBBGP5J?77?YP
-		GGGGGGGGGGGP!?GBBBBBBBBBBBBBBBBBBBBBBBB###BGYYJ?777?J5PGGGG
-		GGGGGGGGGGGYYGBBBBBBBBBBBBBBBBBBBBBBBBBBB##GY~!5PPGGGGGGGGG
-		GGGGGGGGGBP?5GBBBBBBBBBBBBBBBBBBBBBBBBBBBB###J~PGGGGGGGGGGG
-		GGGGGGGGGGJ^PBBBBGPPGBBBBBBBBBBBBBBBBBPPPB##BP^5BGGGGGGGGGG
-		GGGGGGGGGG!!GBBB?~G#?JBBBBBBBBBBBBBBP!G#?~PBBB~?BGGGGGGGGGG
-		GGGGGGGGG5^JBBBG~^77^7BBBBBBBBBBBBBB5^!?~^5BBB?~GBGGGGGGGGG
-		GGGGGGGGG7~GBBB#GY?J5BBBBBBP!!JBBBBBBPJ?JPBBB#G~JBGGGGGGGGG
-		GGGGGGGBP~?P5YY5PB#BBBBPBBBB5JGBBBGGBBB#BP5YY5G7!BGGGGGGGGG
-		GGGGGGGGG!~?7????JPBBBBY77?7!~7??7JPBBBP???????~?BGGGGGGGGG
-		GGGGGGGGGY^!?7????JBBBB#J^^!77!~^~BBBBB???????!~PBGGGGGGGGG
-		GGGGGGGGPGY~!777??PBBBBBG~?5555Y~JBBBBB5?????!~5BGGGGGGGGGG
-		GGGGGGGGGGG57~!?5GBBBBBBBP7?JJJ7JBBBBBB#B5J!~?GBGGGGGGGGGGG
-		GGGGGGGGGGPGG5?77?YPGGBBBBBP555G#BBBBBG5J77JPBBGGGGGGGGGGGG
-		GGGGGGGGGGGGPGGP5J?77?JY55PGGGGPP5YJ?77?YPGBBGGGGGGGGGGGGGG
-		GGGGGGGGGGGGGGGGGGGGP5YJ??777777??JY5PGGGGGGGGGGGGGGGGGGGGG
-		GGGGGGGGGGGGGGGGGGGGGGGGGGGPPPPGGGGGGGGGGGGGGGGGGGGGGGGGGGG
+			  _______________n_n_
+		 _ ,-'                   \_
+		(_/                    '_'o\
+		  |                    (__) )
+		  \    |________|   |___,.-'
+		   |   |_|______|   |n_n_
+		 _ \___/        \___/    \_
+		(_ d888          8888  @ @.\
+		   Y888          Y88P    -- )
+		   '888b_________d88b___,.-'
+			Y888_|_______8888n_n_
+		  __"YP"         "YP"    \_
+		 (_/                   ' 'o\
+		   |                     -- )
+		   \    |_______|   |___,.-'
+			|   | |     |   | |
+			\___/-'     \___/-'
+
 )";
+}
+
+void stateRead(board a, COORD& cursor, int& cols, int& rows, State s[], int numState)
+{
+	int len = 0;
+	numState = 0; //chọn chơi màn lưu nào
+	cursor.X = s[numState].p_;
+	cursor.Y = s[numState].q_;
+	rows = s[numState].p;
+	cols = s[numState].q;
+	for (int i = 1; i < cols - 1; i++)
+	{
+		for (int k = 1; k < rows - 1; k++)
+		{
+			a[i][k].box[2][4] = s[numState].board[len];
+			len++;
+		}
+	}
 }
 
 void generateBoard(board& curboard, int ROWS, int COLS, int amountpoke)
 {
-	int temp = ROWS - 2;
-	int* typeLimit = new int[temp];
-	//min xài để đếm số lượng tối thiểu 1 pokemon sẽ xuất hiện
-	int minPoke = (temp * temp) / amountpoke;
-	//excess dùng để tính có bao nhiêu pokemon sẽ dc +2 vào số lượng có thể dc xuất hiện
-	int excessPoke = ((temp * temp) % amountpoke) / 2;
-	//phân bổ số lượng vào từng pokemon
-	for (int i = 0; i < amountpoke; i++)
+	int random1, random2, len = 0;
+	char temp[100] = { 0 };
+	for (int i = 1; i < ROWS - 1; i++)
 	{
-		typeLimit[i] = minPoke;
-	}
-	//chọn ngẫu nhiên những pokemon dc xuất hiện nhiều hơn 
-	for (int i = 0; i < excessPoke; i++)
-	{
-		typeLimit[rand() % amountpoke] += 2;
-	}
-
-	int type[8] = { 1, 2, 3, 4, 5, 6, 7, 8 };
-	int countType[8] = {0, 0, 0, 0, 0, 0, 0, 0};
-	//khai báo mảng động
-
-	//Tạo phần tử ngẫu nhiên
-	for (int i = 1; i < ROWS - 1; i++) {
 		for (int k = 1; k < COLS - 1; k++)
 		{
-			int random;
-			do {
-				random = rand() % 8;
-			} while (countType[random] >= typeLimit[random]);
-			curboard[i][k].key = (char)(65 + type[random]);
-			curboard[i][k].box[2][4] = curboard[i][k].key;
-			countType[random]++;
+			curboard[i][k].box[2][4] = '0';
 		}
+	}
+	for (int i = 1; i < ROWS - 1; i++)
+	{
+		for (int k = 1; k < (COLS / 2); k++)
+		{
+			char store = char(rand() % 15 + 65);
+			curboard[i][k].box[2][4] = store;
+			curboard[i][k].key = store;
+			temp[len] = store;
+			len++;
+		}
+	}
 
+	for (int i = 0; i < len; i++)
+	{
+		do {
+			random1 = rand() % (ROWS - 2) + 1;
+			random2 = rand() % (COLS - 2) + 1;
+		} while (curboard[random1][random2].KeyinBox() != '0');
+		curboard[random1][random2].box[2][4] = temp[i];
+		curboard[random1][random2].key = temp[i];
 	}
 }
  
-void StandardMode1(int ROWS, int COLS)
+void StandardMode1(Player curplayer, int ROWS, int COLS)
 {
 	int enterTime = -1; //so lan an enter
 	int emptycell = 0; //không tính các ô trống ở viền
@@ -342,27 +364,25 @@ void StandardMode1(int ROWS, int COLS)
 	int score = 0;
 	int i = 1;
 
-	COORD curpos{ 3, 4 };//vị trí của con trỏ trên bảng
+	COORD curpos{ ROWS/2 - 1, COLS/2 };//vị trí của con trỏ trên bảng
 	COORD selpos[2]{ -1,-1};//vị trí của 2 con trỏ được chọn để nối với nhau
 	COORD helppos[2]{ -1,-1, -1, -1 }; //vị trí của 2 ô được gợi ý 
 	COORD temppos[2]{ -1,-1,-1,-1 };
 	board newboard = initialBoard(ROWS, COLS);
 
-	
 	system("CLS");
 	//setMargin(newboard, 8, 8);
-
 	//initial a board
-	generateBoard(newboard, ROWS, COLS, 8);
+	generateBoard(newboard, ROWS, COLS, 14);
 	drawRectangle(8, 4, 10 * (COLS - 2) + 3, 2 + 5 * (ROWS - 2), WHITE);
+	gameBackground(0, 6);
 	drawBoardAtStart(newboard, ROWS, COLS);
 	//drawTable(curpos, helppos, newboard, ROWS, COLS);
 	drawSubTable(86, 5, 20, 3, score);//cập nhật điểm
 	drawNotiTable(86, 21, 20, 3," ", "  HOPE YOU HAVE FUN :3", " ");//cập nhật các thông báo ở bảng noti
-
 	playSound(3, 1);
 	//move cursor in the board/
-	while (emptycell < 36)
+	while (emptycell < (ROWS - 1) * (COLS - 1))
 	{
 		fflush(stdin);
 		
@@ -382,7 +402,7 @@ void StandardMode1(int ROWS, int COLS)
 			i = i*-1;
 			playSound(3, i);
 			string t = (i == 1) ? "    MUSIC IS NOW ON" : "    MUSIC IS NOW OFF";
-			drawNotiTable(86, 21, 20, 3, " ", t, " ");//cập nhật các thông báo ở bảng noti
+			drawNotiTable(86, 21, 20, 3, " ", t, " ");
 		}
 		else if (input == 72 || input == 75 || input == 77 || input == 80) //xu ly khi an phim mui ten de di chuyen
 		{
@@ -393,8 +413,8 @@ void StandardMode1(int ROWS, int COLS)
 			line2 = "CELL[]|[]";
 			line2.insert(5, to_string(curpos.Y));
 			line2.insert(9, to_string(curpos.X));
-			drawNotiTable(86, 21, 20, 3, " ", line1 + line2, " ");//cập nhật các thông báo ở bảng noti
-		}
+			drawNotiTable(86, 21, 20, 3, " ", line1 + line2, " ");
+		}//
 		else if (enterTime == 0 && newboard[curpos.Y][curpos.X].isSelected == 1)//xu ly khi an enter lan 1
 		{
 			if(input=='\r')
@@ -408,31 +428,28 @@ void StandardMode1(int ROWS, int COLS)
 			line2.insert(5, to_string(curpos.Y));
 			line2.insert(8, to_string(curpos.X));
 			line2 = "      " + line2;
-			drawNotiTable(86, 21, 20, 3, line1 ,line2, " ");//cập nhật các thông báo ở bảng noti
+			drawNotiTable(86, 21, 20, 3, line1 ,line2, " ");
 		}
 		else if (enterTime == 1) //xu ly khi an enter lan 2
 		{
 			selpos[1].Y = curpos.Y;
 			selpos[1].X = curpos.X;
 			enterTime = -1;
-			//string line1;
-			//string line2;
-			//line1 = "   YOU ARE SELECTING";
-			//line2 = "CELL[][]";
-			//line2.insert(5, to_string(curpos.Y));
-			//line2.insert(8, to_string(curpos.X));
-			//line2 = "      " + line2;
-			//drawNotiTable(86, 21, 20, 3, line1, line2, " ");//cập nhật các thông báo ở bảng noti
-			if (checkAll(newboard, selpos[0], selpos[1], 8) == 1 && newboard[selpos[0].Y][selpos[0].X].KeyinBox() == newboard[selpos[1].Y][selpos[1].X].KeyinBox())//khi co thuat toan check I U Z L se thay the dong code nay	
+			if ( newboard[selpos[0].Y][selpos[0].X].KeyinBox() == newboard[selpos[1].Y][selpos[1].X].KeyinBox())//khi co thuat toan check I U Z L se thay the dong code nay	
 			{
 				playSound(2, 1);
+				
+				int getscore = checkAndDraw(newboard, selpos[0], selpos[1], ROWS, 14);
+				Sleep(700);
+				checkAndDraw(newboard, selpos[0], selpos[1], ROWS, 0);
+				drawRectangle(8, 4, 10 * (COLS - 2) + 3, 2 + 5 * (ROWS - 2), WHITE);
 				newboard[selpos[0].Y][selpos[0].X].deBox();
 				newboard[selpos[1].Y][selpos[1].X].deBox();
 				string line1 = "        GREAT!!!";
-				string line2 = "YOU HAVE GOT 2 POINTS !!!";
-				drawNotiTable(86, 21, 20, 3, line1, line2, " ");//cập nhật các thông báo ở bảng noti
+				string line2 = "YOU HAVE GOT " + to_string(getscore) +  " POINTS !!!";
+				drawNotiTable(86, 21, 20, 3, line1, line2, " ");
 				emptycell += 2;
-				score += 2;
+				score += getscore; 
 			}
 			else
 			{
@@ -457,8 +474,6 @@ void StandardMode1(int ROWS, int COLS)
 			helppos[0] = { -1, -1 };
 			helppos[1] = { -1, -1 };
 			drawTable(curpos, helppos, newboard, ROWS, COLS);
-			emptycell += 2;
-			enterTime = -1;
 			string line1;
 			string line2;
 			string line3;
@@ -471,6 +486,14 @@ void StandardMode1(int ROWS, int COLS)
 			line3.insert(4, to_string(temppos[1].X));
 			line2 += " MATCHES " + line3;
 			drawNotiTable(86, 21, 20, 3, line1, line2, " ");//cập nhật các thông báo ở bảng noti
+		}
+		else if (input == 'f' || input == 'F')
+		{
+			shuffle2(newboard, ROWS);
+		}
+		else if (input == 's' || input == 'S')
+		{
+
 		}
 		drawTable(curpos, helppos, newboard, ROWS, COLS);
 	}
@@ -494,5 +517,5 @@ void StandardMode1(int ROWS, int COLS)
 		Sleep(1000);
 	}
 	Sleep(1000);
-	releaseBoard(newboard, 8, 8);
+	releaseBoard(newboard, ROWS,  COLS);
 }

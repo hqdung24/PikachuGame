@@ -1,10 +1,14 @@
-#pragma once
-
+﻿#pragma once
 #include "Menu.h"
 #include "Console.h"
-string MenuList[10]{ "     START   ", " RULES OF GAME ", "  LEADERBOARD  ", "     QUIT     "};
-
-void printBanner()
+#include "StandardMode.h"
+using namespace std;
+string MainMenu[10]{ "     PLAY    ", " RULES OF GAME ", "  LEADERBOARD  ", "   SIGN OUT   "};
+string StartMenu[2] = {"     START   ", "     QUIT      "};
+string NewOrContinueMenu[3] = { "    New Game   ", "    Continue   ", "     Back    " };
+string GameDifficultMenu[3] = { "     Easy    ", "    Normal   ", "     Back    " };
+string EmptyMenu[4] = { "             ", "             ", "             ", "             " };
+void printBanner(string username)
 {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(hConsole, 14);
@@ -18,7 +22,10 @@ void printBanner()
                                  |_|      (_____)|_|  \_)|_|  |_| \______)|_|   |_| \______|
                                    
 )";
-    cout << right << setw(77) << "by: huyndungg && hoangkhangg ";
+    
+        SetConsoleTextAttribute(hConsole, LIGHT_RED);
+        printText("User : " + username, 55, 18, LIGHT_RED);
+    
 }
 
 void drawBackground(int x, int y)
@@ -102,7 +109,6 @@ void drawBackground(int x, int y)
           )";
 }
 
-
 void choosePointer(int x, int y, int choosing)
 {
     
@@ -112,69 +118,6 @@ void choosePointer(int x, int y, int choosing)
     cout << ">>" ;
     gotoxy(x+19, y);
     cout << "<<";
-}
-
-void printMainMenu(int x, int y, int cursor)
-{
-   
-    int i = 0;
-    int color = 0;
-    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-  
-    while (i<4) {
-        gotoxy(x, y);
-        if (i == cursor)
-        {//highlight background
-
-            drawRectangle(x+1, y + i * 3, 17, 3, 0);
-            color = 14;
-            drawRectangle(x, y + i * 3, 19, 3, color);
-            printText(MenuList[i], x+2, y + i * 3 + 1, color);
-            choosePointer(x,y + i * 3+1, 1);
-        }
-        else
-        {
-            drawRectangle(x, y + i * 3, 19, 3, 0);
-            color = 11;
-            drawRectangle(x+1 ,y + i * 3, 17, 3, color);
-            printText(MenuList[i], x+2, y + i * 3 + 1, color);
-            choosePointer(x, y + i * 3 + 1, 0);
-        }
-        i++;
-    }
-   
-}
-
-int MenuChoice() //MOVE UP AND DOWN, RETURN THE CHOICE
-{
-    char ch;
-    
-    int cursor = 0;
-
-    int choice = 0;
-    drawBackground(0, 20);
-    printMainMenu(52, 20, cursor);
-    while (true) 
-    {
-        ch = _getch();
-        if (ch == 72 && cursor != 0) 
-        { // up arrow
-            playSound(1, 1);
-            cursor--;
-        }
-        else if (ch == 80 && cursor < 4 - 1) 
-        { // down arrow
-            playSound(1, 1);
-            cursor++;
-        }
-        else if (ch == '\r')
-        {//enter key
-            playSound(2, 1);
-            Sleep(300);
-            return cursor;
-        }
-        printMainMenu(52, 20, cursor);
-    }
 }
 
 void printText(const string text, int x, int y, int color)
@@ -195,6 +138,7 @@ void drawVerticalLine(int x, int y, int length, int color)
         cout << (char)VerticalDash;
     }
 }
+
 void drawHorizontalLine(int x, int y, int length, int color)
 {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -206,7 +150,7 @@ void drawHorizontalLine(int x, int y, int length, int color)
     }
 }
 
-void drawRectangle(int x, int y, int width, int length, int color)
+void drawRectangle(int x, int y, int width, int length, int color)//width là độ dài theo chiều ngang, length là độ dài theo chiều dọc
 {
   
     //gotoxy(x + j, y + i);
@@ -223,12 +167,56 @@ void drawRectangle(int x, int y, int width, int length, int color)
     gotoxy(x, y + length - 1); cout << (char)downleftcorn;
 }
 
+void printMenu(string menuType[], int size, int x, int y, int cursor)
+{
+    int i = 0;
+    int color = 0;
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
+    while (i < size) {
+        gotoxy(x, y);
+        if (i == cursor)
+        {//highlight background
+
+            drawRectangle(x + 1, y + i * 3, 17, 3, 0);
+            color = 14;
+            drawRectangle(x, y + i * 3, 19, 3, color);
+            printText(menuType[i], x + 2, y + i * 3 + 1, color);
+            choosePointer(x, y + i * 3 + 1, 1);
+        }
+        else
+        {
+            drawRectangle(x, y + i * 3, 19, 3, 0);
+            color = 11;
+            drawRectangle(x + 1, y + i * 3, 17, 3, color);
+            printText(menuType[i], x + 2, y + i * 3 + 1, color);
+            choosePointer(x, y + i * 3 + 1, 0);
+        }
+        i++;
+    }
+}
+
+void printEmptyMenu(int size, int x, int y, int cursor)
+{
+    int i = 0;
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
+    while (i < size) {
+    gotoxy(x, y);
+    drawRectangle(x, y + i * 3, 19, 3, 0);
+    drawRectangle(x + 1, y + i * 3, 17, 3, 0);
+    printText(MainMenu[i], x + 2, y + i * 3 + 1, 0);
+    choosePointer(x, y + i * 3 + 1, 0);
+    i++;
+    }
+}
+
 void printLeaderBoard()
 {
     system("CLS");
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(hConsole, LIGHT_RED);
-    gotoxy(5, 5);
+    gotoxy(5, 2);
     cout << R"(
                               _                      _               ___                         _ 
                              | |     ___   __ _   __| |  ___   _ _  | _ )  ___   __ _   _ _   __| |
@@ -236,13 +224,13 @@ void printLeaderBoard()
                              |____| \___| \__,_| \__,_| \___| |_|   |___/ \___/ \__,_| |_|   \__,_|
                                                                                                    )";
     int id = 1;
-    drawRectangle(34, 11, 60, 33, LIGHT_AQUA);
+    drawRectangle(34, 8, 60, 33, LIGHT_AQUA);
     for (int i = 1; i < 34; i++)
     {
         if (i == 2)
         {
             SetConsoleTextAttribute(hConsole, WHITE);
-            gotoxy(35, 10 + i);
+            gotoxy(35, 7 + i);
             cout << left<<setw(8) <<" RANK" <<setw(20)<< "USERNAME" <<setw(20)<< "RECORD " << "DATE";
         }
         else 
@@ -250,7 +238,7 @@ void printLeaderBoard()
             if (i % 2 == 0)
             {
                 
-                gotoxy(36, 10 + i);
+                gotoxy(36, 7 + i);
                 if (id <=3 && id >=1) SetConsoleTextAttribute(hConsole, RED);
                 else if (id <=10) SetConsoleTextAttribute(hConsole, GREEN);
                 else SetConsoleTextAttribute(hConsole, WHITE);
@@ -258,12 +246,196 @@ void printLeaderBoard()
             }
             if (i % 2 != 0)
             {
-                gotoxy(34, 10 + i);
-                drawHorizontalLine(35, 10 + i, 58, LIGHT_AQUA);
+                gotoxy(34, 7 + i);
+                drawHorizontalLine(35, 7 + i, 58, LIGHT_AQUA);
             }
         }
     }
 }
 
+int MainMenuChoice() //MOVE UP AND DOWN, RETURN THE CHOICE
+{
+    char ch;
 
+    int cursor = 0;
 
+    int choice = 0;
+    //drawBackground(0, 20);
+    printMenu(MainMenu, 4, 52, 20, cursor);
+    while (true)
+    {
+        ch = _getch();
+        if (ch == 72 && cursor != 0)
+        { // up arrow
+            playSound(1, 1);
+            cursor--;
+        }
+        else if (ch == 80 && cursor < 4 - 1)
+        { // down arrow
+            playSound(1, 1);
+            cursor++;
+        }
+        else if (ch == '\r')
+        {//enter key
+            playSound(2, 1);
+            Sleep(300);
+            return cursor;
+        }
+        printMenu(MainMenu, 4, 52, 20, cursor);
+    }
+}
+
+int StartMenuChoice(Player playerlist[100], int& n) //RETURN THE INDEX OF PLAYER
+{
+    char ch;
+    int cursor = 0;
+    int choice = 0;
+    //drawBackground(0, 20);
+    printMenu(StartMenu, 2, 52, 20, cursor);
+    while (true)
+    {
+        ch = _getch();
+        if (ch == 72 && cursor != 0)
+        { // up arrow
+            playSound(1, 1);
+            cursor--;
+        }
+        else if (ch == 80 && cursor < 2)
+        { // down arrow
+            playSound(1, 1);
+            cursor++;
+        }
+        else if (ch == '\r')
+        {//enter key
+            playSound(2, 1);
+            Sleep(300);
+            system("CLS");
+            if (cursor == 0)
+            {
+                int index = EnterInfor(playerlist, n, 40, 20);
+                return index; //return index of current player
+            }
+            else return -1; // out game
+
+        }
+        printMenu(StartMenu, 2, 52, 20, cursor);
+    }
+}
+
+int DifficultMenuChoice() //MOVE UP AND DOWN, RETURN THE CHOICE
+{
+    char ch;
+
+    int cursor = 0;
+
+    int choice = 0;
+    //drawBackground(0, 20);
+    printEmptyMenu(4, 52, 20, cursor);
+    printMenu(GameDifficultMenu, 3, 52, 20, cursor);
+    while (true)
+    {
+        ch = _getch();
+        if (ch == 72 && cursor != 0)
+        { // up arrow
+            playSound(1, 1);
+            cursor--;
+        }
+        else if (ch == 80 && cursor < 2)
+        { // down arrow
+            playSound(1, 1);
+            cursor++;
+        }
+        else if (ch == '\r')
+        {//enter key
+            playSound(2, 1);
+            Sleep(300);
+            if (cursor == 0) return 6;
+            if (cursor == 1) return 8;
+            if (cursor == 2) return -1; //back
+        }
+        printMenu(GameDifficultMenu, 3, 52, 20, cursor);
+    }
+}
+
+int NewOrContinueChoice() //MOVE UP AND DOWN, RETURN THE CHOICE
+{
+    char ch;
+
+    int cursor = 0;
+
+    int choice = 0;
+    //drawBackground(0, 20);
+    printEmptyMenu(5, 52, 20, cursor);
+    printMenu(NewOrContinueMenu, 3, 52, 20, cursor);
+    while (true)
+    {
+        ch = _getch();
+        if (ch == 72 && cursor != 0)
+        { // up arrow
+            playSound(1, 1);
+            cursor--;
+        }
+        else if (ch == 80 && cursor < 3)
+        { // down arrow
+            playSound(1, 1);
+            cursor++;
+        }
+        else if (ch == '\r')
+        {//enter key
+            playSound(2, 1);
+            Sleep(300);
+            if (cursor == 0) return 0; //new game
+            if (cursor == 1) return 1; //continue
+            if (cursor == 2) return -1; //back
+        }
+        printMenu(NewOrContinueMenu, 3, 52, 20, cursor);
+    }
+}
+
+void game(Player playerlist[10], int n, int index)
+{
+    int menuchoice = -1;
+    do
+    {
+        system("CLS");
+        printBanner(playerlist[index].name);
+        menuchoice = MainMenuChoice();
+        switch (menuchoice)
+        {
+        case 0:
+        {
+            int size = DifficultMenuChoice();
+            if (size == -1) break;
+            else
+            {
+                //CHỖ NÀY SẼ VIẾT HÀM CHECK XEM PLAYER ĐÓ ĐÃ CHƠI MÀN ĐÓ HAY CHƯA, NẾU CHƯA THÌ VÀO THẲNG GAME, NẾU RỒI THÌ GỌI HÀM NewOrContinueChoice();
+                int choice = NewOrContinueChoice();
+                if (choice == -1) break;
+                playSound(0, -1);
+                StandardMode1(playerlist[index], size, size);
+                break;
+            }
+        }
+        case 1:
+        {
+            system("ClS");
+            break;
+        }
+        case 2:
+        {
+            printLeaderBoard();
+            break;
+        }
+        case 3:
+        {
+            cout << "3";
+            break;
+        }
+        default:
+        {
+            menuchoice = -1;
+            break;
+        }
+        }
+    } while (menuchoice != 3);
+}

@@ -2,10 +2,9 @@
 #include <iostream>
 #include <windows.h>
 #include <mmsystem.h>
-#include <string>
 #include <vector>
-
-
+#include <string>
+using namespace std;
 #define VerticalDash 179;
 #define HorizontalDash 196;
 #define downleftcorn 192; 
@@ -29,6 +28,8 @@
 #define LIGHT_PURPLE 13
 #define LIGHT_YELLOW 14
 #define BRIGHT_WHITE 15
+
+
 
 using namespace std;
 

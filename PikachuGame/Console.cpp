@@ -58,7 +58,7 @@ void ShowCur(bool CursorVisibility)
     HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     CONSOLE_CURSOR_INFO info;
     GetConsoleCursorInfo(consoleHandle, &info);
-    info.bVisible = false; // set the cursor visibility to false
+    info.bVisible = CursorVisibility; // set the cursor visibility to false
     SetConsoleCursorInfo(consoleHandle, &info);
 }
 
