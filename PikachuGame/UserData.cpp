@@ -94,7 +94,7 @@ int EnterInfor(Player playerlist[100], int &n, int x, int y)//return the index o
 	return check;
 }
 
-void stateSave(board a, COORD cursor, int columns, int rows, State& s, int stateCount)
+void stateSave(board a, COORD cursor, int columns, int rows, State& s)
 {
 	int len = 0;
 	for (int i = 1; i < columns - 1; i++)
@@ -110,21 +110,22 @@ void stateSave(board a, COORD cursor, int columns, int rows, State& s, int state
 	s.q_ = cursor.Y;
 	s.p = rows;
 	s.q = columns;
+	Beep(500, 1000);
 }
 
-void stateRead(board a, COORD& cursor, int& columns, int& rows, State s[], const Player& sf, int numState)
+void stateRead(board &a, COORD &cursor, int columns, int rows, State& s)
 {
 	int len = 0;
-	numState = 0; //chọn chơi màn lưu nào
-	cursor.X = s[numState].p_;
-	cursor.Y = s[numState].q_;
-	rows = s[numState].p;
-	columns = s[numState].q;
+	cursor.X = s.p_;
+	cursor.Y = s.q_;
+	rows = s.p;
+	columns = s.q;
 	for (int i = 1; i < columns - 1; i++)
 	{
 		for (int k = 1; k < rows - 1; k++)
 		{
-			a[i][k].box[2][4] = s[numState].board[len];
+			a[i][k].box[2][4] = s.board[len];
+			a[i][k].key = s.board[len];
 			len++;
 		}
 	}
@@ -145,46 +146,56 @@ void recordSave(Record& r, int points)
 	r.points = points;
 }
 
-void binaryWrite(Record r[5], Player sf, State s[5], char user[50], char pass[50], char mask)
+void binaryRead(Player player[], const char* fileName, int n)
 {
-	//sf.mask = '0'; //chưa quyết định
-	sf.name = user;
-	sf.name = pass;
-	//viết tất cả vào file
 	fstream myfile;
-	myfile.open("test.dat", ios::binary | ios::out);
+	myfile.open(fileName, ios::binary | ios::in );
 	if (!myfile.is_open())
 	{
-		cout << "Erorr. File don't exist..." << endl;
 		system("CLS");
+		cout << "Error. File don't exsit..." << endl;
 		system("pause");
 		return;
 	}
-	/*for (int i = 0; i < sizeof(Player); i++) {
-		reinterpret_cast<char*>(&sf)[i] ^= mask;
-	}*/
-	myfile.write((char*)&sf, sizeof(Player));//sizeof dùng để lấy kích thước của struct Player. Coi ref để hiểu thêm.
+	//size* sizeof(Player) là để tính kích thước của mảng struct player, ko thể sử dụng sizeof(player) vì nó sẽ trả ra kích thước của con trỏ
+	myfile.write((char*)&player,  n * sizeof(Player));
+	myfile.close();
+}
+
+void binaryWrite(Player player[], const char* fileName, int n)
+{
+	//viết tất cả vào file
+	fstream myfile;
+	myfile.open(fileName, ios::binary | ios::out | ios::trunc);
+	if (!myfile.is_open())
+	{
+		system("CLS");
+		cout << "Erorr. File don't exist..." << endl;
+
+		system("pause");
+		return;
+	}
+	myfile.write((char*)&player, n * sizeof(Player));//sizeof dùng để lấy kích thước của struct savefile. Coi ref để hiểu thêm.
 	myfile.close();
 	return;
 }
 
-void binaryRead(Player sf, char mask)
+void swap(Player &a, Player &b) 
 {
-	fstream myfile;
-	myfile.open("test.dat", ios::binary | ios::in);
-	if (!myfile.is_open())
-	{
-		cout << "Error. File don't exsit..." << endl;
-		system("CLS");
-		system("pause");
-		return;
-	}
-	myfile.write((char*)&sf, sizeof(Player));
-	/*for (int i = 0; i < sizeof(Player); i++) {
-		reinterpret_cast<char*>(&sf)[i] ^= mask;
-	}*/
-	myfile.close();
-
+	Player t = a;
+	a = b;
+	b = t;
 }
 
-
+// Function to implement Interchange Sort
+void sortLeaderboard(Player p[], int amountPlayer) 
+{
+	for (int i = 0; i < amountPlayer; i++)
+	{
+		for (int k = i + 1; k < amountPlayer; k++)
+		{
+			if (p[k].record.points > p[i].record.points)
+				swap(p[k], p[i]);
+		}
+	}
+}

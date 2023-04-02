@@ -211,9 +211,10 @@ void printEmptyMenu(int size, int x, int y, int cursor)
     }
 }
 
-void printLeaderBoard()
+void printLeaderBoard(Player playerlist[100], int n)
 {
     system("CLS");
+    sortLeaderboard(playerlist, n);
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(hConsole, LIGHT_RED);
     gotoxy(5, 2);
@@ -223,7 +224,7 @@ void printLeaderBoard()
                              | |__  / -_) / _` | / _` | / -_) | '_| | _ \ / _ \ / _` | | '_| / _` |
                              |____| \___| \__,_| \__,_| \___| |_|   |___/ \___/ \__,_| |_|   \__,_|
                                                                                                    )";
-    int id = 1;
+    int id = 0;
     drawRectangle(34, 8, 60, 33, LIGHT_AQUA);
     for (int i = 1; i < 34; i++)
     {
@@ -239,10 +240,13 @@ void printLeaderBoard()
             {
                 
                 gotoxy(36, 7 + i);
-                if (id <=3 && id >=1) SetConsoleTextAttribute(hConsole, RED);
-                else if (id <=10) SetConsoleTextAttribute(hConsole, GREEN);
-                else SetConsoleTextAttribute(hConsole, WHITE);
-                cout << id++ << ".";
+                if (id <=2 && id >=0) SetConsoleTextAttribute(hConsole, RED); //top 3
+                else if (id <=9) SetConsoleTextAttribute(hConsole, GREEN); // top 10
+                else SetConsoleTextAttribute(hConsole, WHITE); // others
+                if (playerlist[0].record.points != 0)
+                {
+                    cout << left << setw(8) << id + 1 << setw(20) << playerlist[id].name << setw(17) << playerlist[id].record.points; playerlist[id++].outputDate();
+                }
             }
             if (i % 2 != 0)
             {
@@ -251,6 +255,8 @@ void printLeaderBoard()
             }
         }
     }
+    char c;
+    c = _getch();
 }
 
 int MainMenuChoice() //MOVE UP AND DOWN, RETURN THE CHOICE
@@ -392,6 +398,8 @@ int NewOrContinueChoice() //MOVE UP AND DOWN, RETURN THE CHOICE
     }
 }
 
+
+
 void game(Player playerlist[10], int n, int index)
 {
     int menuchoice = -1;
@@ -409,10 +417,18 @@ void game(Player playerlist[10], int n, int index)
             else
             {
                 //CHỖ NÀY SẼ VIẾT HÀM CHECK XEM PLAYER ĐÓ ĐÃ CHƠI MÀN ĐÓ HAY CHƯA, NẾU CHƯA THÌ VÀO THẲNG GAME, NẾU RỒI THÌ GỌI HÀM NewOrContinueChoice();
-                int choice = NewOrContinueChoice();
-                if (choice == -1) break;
-                playSound(0, -1);
-                StandardMode1(playerlist[index], size, size);
+                if (playerlist[index].state[(size == 6) ? 0 : 1].board[0] != '\0') //da choi truoc do
+                {
+                    int Continue = NewOrContinueChoice(); // chọn continue hay new game
+                    if (Continue == -1) break;
+                    playSound(0, -1);
+                    StandardMode1(playerlist[index], size, size, Continue);
+                }
+                else // chua choi truoc do
+                {
+                    playSound(0, -1);
+                    StandardMode1(playerlist[index], size, size, 0);
+                }
                 break;
             }
         }
@@ -423,7 +439,7 @@ void game(Player playerlist[10], int n, int index)
         }
         case 2:
         {
-            printLeaderBoard();
+            printLeaderBoard(playerlist, n);
             break;
         }
         case 3:

@@ -338,13 +338,14 @@ void generateBoard(board& curboard, int ROWS, int COLS, int amountpoke)
 	}
 }
  
-void StandardMode1(Player curplayer, int ROWS, int COLS)
+void StandardMode1(Player& curplayer, int ROWS, int COLS, int Continue)
 {
 	int enterTime = -1; //so lan an enter
 	int emptycell = 0; //không tính các ô trống ở viền
 	char input = '0';
 	int score = 0;
-	int i = 1;
+	int i = 1;//turn on/off music
+	int savegame = 0; //CHƯA XỬ LÝ BIẾN NÀY
 
 	COORD curpos{ ROWS/2 - 1, COLS/2 };//vị trí của con trỏ trên bảng
 	COORD selpos[2]{ -1,-1};//vị trí của 2 con trỏ được chọn để nối với nhau
@@ -353,26 +354,38 @@ void StandardMode1(Player curplayer, int ROWS, int COLS)
 	board newboard = initialBoard(ROWS, COLS);
 
 	system("CLS");
-	//setMargin(newboard, 8, 8);
 	//initial a board
-	generateBoard(newboard, ROWS, COLS, 14);
 	drawRectangle(8, 4, 10 * (COLS - 2) + 3, 2 + 5 * (ROWS - 2), WHITE);
 	gameBackground(0, 6);
-	drawBoardAtStart(newboard, ROWS, COLS);
-	//drawTable(curpos, helppos, newboard, ROWS, COLS);
 	drawSubTable(86, 5, 20, 3, score);//cập nhật điểm
-	drawNotiTable(86, 21, 20, 3," ", "  HOPE YOU HAVE FUN :3", " ");//cập nhật các thông báo ở bảng noti
+	drawNotiTable(86, 21, 20, 3, " ", "  HOPE YOU HAVE FUN :3", " ");//cập nhật các thông báo ở bảng noti
+	if (Continue == 0) // new game
+	{
+		generateBoard(newboard, ROWS, COLS, 14);
+		drawBoardAtStart(newboard, ROWS, COLS);
+		
+	}
+	else //continue
+	{
+		stateRead(newboard, curpos, COLS, ROWS, curplayer.state[(ROWS == 6) ? 0 : 1]);
+		score = curplayer.state[(ROWS == 6) ? 0 : 1].CurrentScore;
+		drawTable(curpos, helppos, newboard, ROWS, COLS);
+		int n = 0;
+		while (curplayer.state[(ROWS == 6) ? 0 : 1].board[n] != NULL)
+		if(curplayer.state[(ROWS == 6) ? 0 : 1].board[n++]=='0')
+			emptycell++;
+	}
 	playSound(3, 1);
-	//move cursor in the board/
+	//move cursor in the board
 	while (emptycell < (ROWS - 2) * (COLS - 2))
 	{
 		fflush(stdin);
 		
-		//if (!helpFunc(newboard, ROWS, temppos[0], temppos[1])) //check xem có bị kẹt đường hay không, nếu có thì tráo lại bảng giữ nguyên vị trí
-		//{
-		//	shuffle2(newboard, ROWS);
-		//	drawTable(curpos, helppos, newboard, ROWS, COLS);
-		//}
+		if (!helpFunc(newboard, ROWS, temppos[0], temppos[1])) //check xem có bị kẹt đường hay không, nếu có thì tráo lại bảng giữ nguyên vị trí
+		{
+			shuffle2(newboard, ROWS);
+			drawTable(curpos, helppos, newboard, ROWS, COLS);
+		}
 
 		drawSubTable(86, 5, 20, 3, score);//cập nhật điểm
 		drawTable(curpos, helppos, newboard, ROWS, COLS);
@@ -417,7 +430,7 @@ void StandardMode1(Player curplayer, int ROWS, int COLS)
 			selpos[1].Y = curpos.Y;
 			selpos[1].X = curpos.X;
 			enterTime = -1;
-			if ( newboard[selpos[0].Y][selpos[0].X].KeyinBox() == newboard[selpos[1].Y][selpos[1].X].KeyinBox())//khi co thuat toan check I U Z L se thay the dong code nay	
+			if ( newboard[selpos[0].Y][selpos[0].X].KeyinBox() == newboard[selpos[1].Y][selpos[1].X].KeyinBox() && checkAndDraw(newboard, selpos[0], selpos[1], ROWS, 14) != 0)
 			{
 				playSound(2, 1);
 				
@@ -467,27 +480,41 @@ void StandardMode1(Player curplayer, int ROWS, int COLS)
 			line3.insert(1, to_string(temppos[1].Y));
 			line3.insert(4, to_string(temppos[1].X));
 			line2 += " MATCHES " + line3;
-			drawNotiTable(86, 21, 20, 3, line1, line2, " ");//cập nhật các thông báo ở bảng noti
+			drawNotiTable(86, 21, 20, 3, line1, line2, " -3 POINTS");//cập nhật các thông báo ở bảng noti
+			score -= 3;
 		}
 		else if (input == 'f' || input == 'F')
 		{
 			shuffle2(newboard, ROWS);
+			string line1 = " BOARD WAS SHUFFLED";
+			string line2 = "      -1 POINTS ";
+			score -= 1;
+			drawNotiTable(86, 21, 20, 3, line1, line2, " ");
+			Sleep(1000);
 		}
 		else if (input == 's' || input == 'S')
 		{
-
+			stateSave(newboard, curpos, COLS, ROWS, curplayer.state[(ROWS == 6) ? 0 : 1]);
+			curplayer.state[(ROWS == 6) ? 0 : 1].CurrentScore = score;
+			string t =  "   SAVE SUCCESSFULLY";
+			drawNotiTable(86, 21, 20, 3, " ", t, " ");
+			Sleep(2000);
+			savegame = 1;
+			break;
 		}
 		drawTable(curpos, helppos, newboard, ROWS, COLS);
 	}
 	playSound(3, -1);
-	playSound(7, 1);
-	curpos.Y = 0;
-	curpos.X = 0;
-	drawTable(curpos, helppos, newboard, ROWS, COLS);
-	for (int j = 0; j < 5; j++)
+	if (savegame == 0)
 	{
-		SetConsoleTextAttribute(hConsole, 10 + j);
-		gotoxy(0, 15);
+		playSound(7, 1);
+		curpos.Y = 0;
+		curpos.X = 0;
+		drawTable(curpos, helppos, newboard, ROWS, COLS);
+		for (int j = 0; j < 5; j++)
+		{
+			SetConsoleTextAttribute(hConsole, 10 + j);
+			gotoxy(0, 15);
 			cout << R"(
 	 __     __ ____   _    _  __          __ ____   _   _   _  _  
 	 \ \   / // __ \ | |  | | \ \        / // __ \ | \ | | | || |
@@ -495,9 +522,15 @@ void StandardMode1(Player curplayer, int ROWS, int COLS)
 	   \   / | |  | || |  | |   \ \/  \/ / | |  | || . ` | | || |
 	    | |  | |__| || |__| |    \  /\  /  | |__| || |\  | |_||_|
 	    |_|   \____/  \____/      \/  \/    \____/ |_| \_| (_)(_))";
-		drawRectangle(8, 4, 10 * (COLS - 2) + 3, 2 + 5 * (ROWS - 2), 10+j);
+			if(ROWS!=6)drawRectangle(8, 4, 10 * (COLS - 2) + 3, 2 + 5 * (ROWS - 2), 10 + j);
+			Sleep(1000);
+		}
+		;
+		curplayer.state[(ROWS == 6) ? 0 : 1].CurrentScore = 0;
+		curplayer.state[(ROWS == 6) ? 0 : 1].board[0] = NULL; // empty the save state
 		Sleep(1000);
+		releaseBoard(newboard, ROWS, COLS);
 	}
-	Sleep(1000);
-	releaseBoard(newboard, ROWS,  COLS);
+	if(score >= curplayer.record.points)
+	curplayer.recordSave(score);
 }

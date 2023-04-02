@@ -7,7 +7,11 @@
 #include <mmsystem.h>
 #include <conio.h>
 using namespace std;
-
+struct test
+{
+    int fisrt;
+    int secord;
+};
 #define VerticalDash 179;
 #define HorizontalDash 196;
 #define downleftcorn 192; 
@@ -271,7 +275,12 @@ void drawSubTable(int x, int y, int width, int length)
 //0, 1, 2, 1, 2, 1, 1, 0
 //0, 1, 2, 1, 2, 1, 1, 0
 //0, 0, 1, 0, 2, 1, 2, 0
-
+void swap(test& a, test& b)
+{
+    test t = a;
+    a = b;
+    b = t;
+}
 void drawBox(char cell[5][10], int row, int col) //row, col of the board
 {
     for (int i = 0; i < 5; i++)
@@ -325,8 +334,11 @@ int main()
     cout << endl;
     char c;
     cin >> c;*/
-    ShowCur(1);
-    int c;
-    gotoxy(1, 1);
-    cin >> c;
+    test a{1, 1};
+    test b{ 2, 2 };
+    cout << a.fisrt << a.secord << endl;
+    cout << b.fisrt << b.secord;
+    swap(a, b);
+    cout << a.fisrt << a.secord << endl;
+    cout << b.fisrt << b.secord;
 }
