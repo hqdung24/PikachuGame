@@ -38,7 +38,7 @@ using namespace std;
 
 void printBanner(string username);
 void printMenu(string menuType[], int size, int x, int y, int cursor);
-void printLeaderBoard(Player playerlist[100]);
+void printLeaderBoard(Player playerlist[100], int n);
 int MainMenuChoice();
 void drawBackground(int x, int y);
 void printText(const string text, int x, int y, int color);

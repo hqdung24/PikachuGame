@@ -95,8 +95,8 @@ struct Record
 
 struct Player
 {
-    string name;
-    string password;
+    char name[100];
+    char password[100];
     Record record;
     State state[2]{ NULL, NULL };
     void recordSave(int score)

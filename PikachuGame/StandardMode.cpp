@@ -483,7 +483,7 @@ void StandardMode1(Player& curplayer, int ROWS, int COLS, int Continue)
 			drawNotiTable(86, 21, 20, 3, line1, line2, " -3 POINTS");//cập nhật các thông báo ở bảng noti
 			score -= 3;
 		}
-		else if (input == 'f' || input == 'F')
+		else if (input == 's' || input == 'S')
 		{
 			shuffle2(newboard, ROWS);
 			string line1 = " BOARD WAS SHUFFLED";
@@ -492,7 +492,7 @@ void StandardMode1(Player& curplayer, int ROWS, int COLS, int Continue)
 			drawNotiTable(86, 21, 20, 3, line1, line2, " ");
 			Sleep(1000);
 		}
-		else if (input == 's' || input == 'S')
+		else if (input == 'f' || input == 'F')
 		{
 			stateSave(newboard, curpos, COLS, ROWS, curplayer.state[(ROWS == 6) ? 0 : 1]);
 			curplayer.state[(ROWS == 6) ? 0 : 1].CurrentScore = score;

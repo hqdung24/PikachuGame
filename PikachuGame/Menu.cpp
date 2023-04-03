@@ -400,13 +400,14 @@ int NewOrContinueChoice() //MOVE UP AND DOWN, RETURN THE CHOICE
 
 
 
-void game(Player playerlist[10], int n, int index)
+void game(Player playerlist[100], int n, int index)
 {
     int menuchoice = -1;
     do
     {
         system("CLS");
-        printBanner(playerlist[index].name);
+        string s(playerlist[index].name);
+        printBanner(s);
         menuchoice = MainMenuChoice();
         switch (menuchoice)
         {
@@ -442,9 +443,10 @@ void game(Player playerlist[10], int n, int index)
             printLeaderBoard(playerlist, n);
             break;
         }
-        case 3:
+        case 3: //Sign out option
         {
             cout << "3";
+            binaryWrite(playerlist, "test.bin", n);
             break;
         }
         default:

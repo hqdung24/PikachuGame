@@ -12,7 +12,7 @@ string ReturnToday() {
 void printInforBox(int x, int y)
 {
 	drawRectangle(x, y, 30, 3, WHITE);
-	printText("Enter your username", x+1, y-1, WHITE);
+	printText("Enter your username", x + 1, y - 1, WHITE);
 	gotoxy(0, 0);
 }
 
@@ -21,45 +21,45 @@ void printPasswordBox(int x, int y, int newplayer)
 	drawRectangle(x, y, 30, 3, WHITE);
 	if (newplayer == -1)
 		printText("Create your password", x + 1, y - 1, WHITE);
-	else 
+	else
 		printText("Enter your password", x + 1, y - 1, WHITE);
 }
 
-int checkNewPlayer(Player curplayer[100], int n, string inputName)
+int checkNewPlayer(Player curplayer[100], int n, char inputName[100])
 {
 	for (int i = 0; i < n; i++)
 	{
-		if (inputName == curplayer[i].name)
+		if (strcmp(inputName, curplayer[i].name) == 0)
 			return i;
 	}
 	return -1;
 }
 
 
-int addPlayer(Player playerlist[100],int& n, Player newplayer)
+int addPlayer(Player playerlist[100], int& n, Player newplayer)
 {
-	playerlist[n].name = newplayer.name;
-	playerlist[n].password = newplayer.password;
+	strcpy(playerlist[n].name, newplayer.name);
+	strcpy(playerlist[n].password, newplayer.password);
 	n++;
 	return 1;
 }
 
 
-int EnterInfor(Player playerlist[100], int &n, int x, int y)//return the index of a player in playerlist to enter the game
+int EnterInfor(Player playerlist[100], int& n, int x, int y)//return the index of a player in playerlist to enter the game
 {
 	char c;
 	Player cur;//current player
 	ShowCur(1);
 
 	printInforBox(x, y);
-	gotoxy(x+1, y+1); 
-	getline(cin, cur.name);
+	gotoxy(x + 1, y + 1);
+	cin.getline(cur.name, 100);
 	int check = checkNewPlayer(playerlist, n, cur.name);//if check == -1, we have new player, if != 1, check is the index of one of old players
 
 	y += 4;
 	printPasswordBox(x, y, check);
-	gotoxy(x + 1, y + 1); 
-	getline(cin, cur.password);
+	gotoxy(x + 1, y + 1);
+	cin.getline(cur.password, 100);
 
 	if (check != -1) //old player
 	{
@@ -67,27 +67,27 @@ int EnterInfor(Player playerlist[100], int &n, int x, int y)//return the index o
 		do
 		{
 			cout << endl;
-			
-			if ( cur.password == playerlist[check].password)
+
+			if (strcmp(cur.password, playerlist[check].password) == 0)
 			{
 				break;
 			}
 			else
 			{
-				printText("You have entered wrong password, please try again...", x , y + 3, LIGHT_RED);
+				printText("You have entered wrong password, please try again...", x, y + 3, LIGHT_RED);
 				Sleep(1000);
 			}
 			printText("You have entered wrong password, please try again...", x, y + 3, 0);
 			printText("                       ", x, y + 1, 0);
 			printPasswordBox(x, y, check);
-			gotoxy(x + 1, y + 1); 
-			getline(cin, cur.password);
+			gotoxy(x + 1, y + 1);
+			cin.getline(cur.password, 100);
 		} while (1);
 	}
 	else //new player
 	{
 		check = n;
-		if(addPlayer(playerlist, n, cur)) printText("Create account successfully, press Enter to continue" , x, y + 3, 14);
+		if (addPlayer(playerlist, n, cur)) printText("Create account successfully, press Enter to continue", x, y + 3, 14);
 		c = _getch();
 	}
 	ShowCur(0);
@@ -113,7 +113,7 @@ void stateSave(board a, COORD cursor, int columns, int rows, State& s)
 	Beep(500, 1000);
 }
 
-void stateRead(board &a, COORD &cursor, int columns, int rows, State& s)
+void stateRead(board& a, COORD& cursor, int columns, int rows, State& s)
 {
 	int len = 0;
 	cursor.X = s.p_;
@@ -146,10 +146,10 @@ void recordSave(Record& r, int points)
 	r.points = points;
 }
 
-void binaryRead(Player player[], const char* fileName, int n)
+void binaryRead(Player player[], const char* fileName, int& n)
 {
 	fstream myfile;
-	myfile.open(fileName, ios::binary | ios::in );
+	myfile.open(fileName, ios::binary | ios::in);
 	if (!myfile.is_open())
 	{
 		system("CLS");
@@ -157,8 +157,9 @@ void binaryRead(Player player[], const char* fileName, int n)
 		system("pause");
 		return;
 	}
-	//size* sizeof(Player) là để tính kích thước của mảng struct player, ko thể sử dụng sizeof(player) vì nó sẽ trả ra kích thước của con trỏ
-	myfile.write((char*)&player,  n * sizeof(Player));
+	//n* sizeof(Player) là để tính kích thước của mảng struct player, ko thể sử dụng sizeof(player) vì nó sẽ trả ra kích thước của con trỏ
+	myfile.read((char*)&n, sizeof(n));
+	myfile.read((char*)player, n * sizeof(Player));
 	myfile.close();
 }
 
@@ -175,12 +176,13 @@ void binaryWrite(Player player[], const char* fileName, int n)
 		system("pause");
 		return;
 	}
-	myfile.write((char*)&player, n * sizeof(Player));//sizeof dùng để lấy kích thước của struct savefile. Coi ref để hiểu thêm.
+	myfile.write((char*)&n, sizeof(n));
+	myfile.write((char*)player, n * sizeof(Player));//sizeof dùng để lấy kích thước của struct savefile. Coi ref để hiểu thêm.
 	myfile.close();
 	return;
 }
 
-void swap(Player &a, Player &b) 
+void swap(Player& a, Player& b)
 {
 	Player t = a;
 	a = b;
@@ -188,7 +190,7 @@ void swap(Player &a, Player &b)
 }
 
 // Function to implement Interchange Sort
-void sortLeaderboard(Player p[], int amountPlayer) 
+void sortLeaderboard(Player p[], int amountPlayer)
 {
 	for (int i = 0; i < amountPlayer; i++)
 	{
