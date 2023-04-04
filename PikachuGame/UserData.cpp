@@ -49,18 +49,31 @@ int EnterInfor(Player playerlist[100], int &n, int x, int y)//return the index o
 {
 	char c;
 	Player cur;//current player
+	int check;
 	ShowCur(1);
-
-	printInforBox(x, y);
-	gotoxy(x+1, y+1); 
-	getline(cin, cur.name);
-	int check = checkNewPlayer(playerlist, n, cur.name);//if check == -1, we have new player, if != 1, check is the index of one of old players
-
+	do 
+	{
+		printInforBox(x, y);
+		gotoxy(x + 1, y + 1);
+		getline(cin, cur.name);
+		check = checkNewPlayer(playerlist, n, cur.name);//if check == -1, we have new player, if != 1, check is the index of one of old players
+		if (cur.name.empty())
+		{
+			printText("username cannot be empty", x, y + 3, LIGHT_RED);
+		}
+	} while (cur.name.empty());
+	printText("username cannot be empty", x, y + 3, BLACK);
 	y += 4;
+	do
+	{
 	printPasswordBox(x, y, check);
 	gotoxy(x + 1, y + 1); 
 	getline(cin, cur.password);
-
+	if (cur.password.empty())
+	{
+		printText("password cannot be empty", x, y + 3, LIGHT_RED);
+	}
+	} while (cur.password.empty());
 	if (check != -1) //old player
 	{
 		int checkpass = 0;

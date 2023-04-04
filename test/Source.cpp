@@ -6,6 +6,7 @@
 #include <vector>
 #include <mmsystem.h>
 #include <conio.h>
+#include <fstream>
 using namespace std;
 struct test
 {
@@ -281,14 +282,7 @@ void swap(test& a, test& b)
     a = b;
     b = t;
 }
-void drawBox(char cell[5][10], int row, int col) //row, col of the board
-{
-    for (int i = 0; i < 5; i++)
-    {
-        gotoxy(col * 10, row * 5 + i); // X LA COT, Y LA HANG
-        cout << cell[i] << endl;
-    }
-}
+
 void drawdeBox(char cell[5][10], int row, int col) //row, col of the board
 {
     for (int i = 0; i < 5; i++)
@@ -302,14 +296,59 @@ void drawdeBox(char cell[5][10], int row, int col) //row, col of the board
         cout << endl;
     }
 }
-void ShowCur(bool CursorVisibility)
+void ReadBackgroundfile(string background[], int boardsize)
 {
-    HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_CURSOR_INFO info;
-    GetConsoleCursorInfo(consoleHandle, &info);
-    info.bVisible = false; // set the cursor visibility to false
-    SetConsoleCursorInfo(consoleHandle, &info);
+    ifstream ifs;
+    string filename = (boardsize == 6) ? "easy.txt" : "normal.txt";
+    int i = 0;
+    ifs.open(filename, ios::in);
+    while (!ifs.eof())
+    {
+        getline(ifs, background[i]);
+        int j = background[i].length();
+        while (j < 9 * 8)
+        {
+            background[i].push_back(' ');
+            j++;
+        }
+        i++;
+    }
+    while (i < 5 * 8)
+    {
+        int j = 0;
+        while (j < 9 * 8)
+        {
+            background[i].push_back(' ');
+            j++;
+        }
+        i++;
+    }
+    ifs.close();
 }
+
+void gameBackground(string background[], int boardsize)//sua ham nay
+{
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(hConsole, 14);
+    for (int i = 0; i < boardsize * 5; i++)
+    {
+        cout << background[i] << endl;
+    }
+}
+void drawBackgroundBox(string background[], int boardsize, int row, int col) //row, col of the board
+{
+
+    for (int i = 0; i < 5; i++)
+    {
+        for (int j = 0; j < 9; j++)
+        {
+            gotoxy(col * 10 + j, row * 5 + i);
+            cout << background[row * 5 + i][col * 10 + j];
+        }
+        cout << endl;
+    }
+}
+
 int main()
 {
     char box[5][10] =
@@ -334,11 +373,9 @@ int main()
     cout << endl;
     char c;
     cin >> c;*/
-    test a{1, 1};
-    test b{ 2, 2 };
-    cout << a.fisrt << a.secord << endl;
-    cout << b.fisrt << b.secord;
-    swap(a, b);
-    cout << a.fisrt << a.secord << endl;
-    cout << b.fisrt << b.secord;
+    string background[80];
+    ReadBackgroundfile(background, 8);
+    gameBackground(background, 8);
+    drawBackgroundBox(background, 8, 0, 0);
+    //cout << background[31];
 }

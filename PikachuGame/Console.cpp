@@ -109,11 +109,22 @@ void playSound(int id, int toggle) //1 to play, -1 to pause
 {
     if (toggle == -1)
     {
-        static vector<const wchar_t*> soundFile1{ L"pause MenuMusic.wav", L"pause move.wav", L"pause enter.wav", L"pause ingameBackground1.wav", L"pause createBoardSound.wav",  L"pause SuccessDelete2Cells.wav", L"pause FailDelete2Cells.wav", L"pause winningSound.wav" };
+        static vector<const wchar_t*> soundFile1{ L"pause MenuMusic.mp3", L"pause move.wav", L"pause enter.wav", L"pause ingameBackground.mp3", L"pause createBoardSound.wav",  L"pause SuccessDelete2Cells.wav", L"pause FailDelete2Cells.wav", L"pause winning sound.mp3" };
         mciSendString(soundFile1[id], NULL, 0, 0);
     }
     else {
-        static vector<const wchar_t*> soundFile2{ L"play MenuMusic.wav", L"play move.wav", L"play enter.wav", L"play ingameBackground1.wav", L"play createBoardSound.wav",  L"play SuccessDelete2Cells.wav", L"play FailDelete2Cells.wav", L"play winningSound.wav" };
+        static vector<const wchar_t*> soundFile2{ L"play MenuMusic.mp3 repeat", L"play move.wav", L"play enter.wav", L"play ingameBackground.mp3 repeat", L"play createBoardSound.wav",  L"play SuccessDelete2Cells.wav", L"play FailDelete2Cells.wav", L"play winningsound.mp3" };
         mciSendString(soundFile2[id], NULL, 0, 0);
     }
 }
+
+void moveSound()
+{
+    PlaySound(L"move.wav", 0, SND_FILENAME | SND_ASYNC);
+}
+
+void enterSound()
+{
+    PlaySound(L"enter.wav", 0, SND_FILENAME | SND_ASYNC);
+}
+

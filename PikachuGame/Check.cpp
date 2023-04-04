@@ -513,7 +513,6 @@ bool helpFunc(board a, int boardSize, COORD& p1, COORD& p2)
     p2.X = 0;
     p2.Y = 0;
     cout << endl;
-    cout << "No more steps";
     return 0;
 }
 

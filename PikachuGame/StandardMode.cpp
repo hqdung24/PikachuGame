@@ -33,40 +33,22 @@ void drawBox(char cell[5][10], int row, int col) //row, col of the board
 {
 	for (int i = 0; i < 5; i++) 
 	{
-		gotoxy( col * 10, row * 5 + i); // X LA COT, Y LA HANG
+		gotoxy(col * 10, row * 5 + i); // X LA COT, Y LA HANG
 		cout << cell[i] << endl;
 	}
 }
-void drawdeBox(char cell[5][10], int row, int col) //row, col of the board
+
+void drawBackgroundBox(string background[], int boardsize, int row, int col) //row, col of the board
 {
+	
 	for (int i = 0; i < 5; i++)
 	{
-		 // X LA COT, Y LA HANG
-		gotoxy(col * 10, row * 5 + i); // X LA COT, Y LA HANG
-		cout << "         " << endl;
-	}
-}
-
-void setMargin(board board, int ROWS, int COLS) //draw the margin of the board
-{
-	for (int i = 0; i < ROWS; i++)
-	{
-		for (int j = 0; j < COLS; j++)
+		for (int j = 0; j < 9; j++)
 		{
-			if (i == 0 || i == ROWS - 1) 
-			{
-				board[i][j].box[2][4] = '0';
-				board[i][j].key = '0';
-			}
-			else 
-			{
-				if (j == 0 || j == COLS - 1)
-				{
-					board[i][j].box[2][4] = '0';
-					board[i][j].key = '0';
-				}
-			}
+			gotoxy(col * 10+j, row * 5+i);
+			cout << background[row * 5 + i][col * 10 + j];
 		}
+		cout << endl;
 	}
 }
 
@@ -82,26 +64,14 @@ void drawSubTable(int x, int y, int width, int length, int score)
 	drawRectangle(x - 4, y, width + 8, length * 3, WHITE);
 	y++;
 	printText(" <SHORTCUTS>", x + 3, y++, LIGHT_RED);
-	printText("F : SAVE GAME AND QUIT", x - 2, y++, LIGHT_GREEN);
+	printText("S : SAVE GAME AND QUIT", x - 2, y++, LIGHT_GREEN);
 	printText("Q : GET A MOVE SUGGESTION", x - 2, y++, LIGHT_AQUA);
-	printText("S : SHUFFLE THE BOARD", x - 2, y++, LIGHT_YELLOW);
+	printText("F : SHUFFLE THE BOARD", x - 2, y++, LIGHT_YELLOW);
 	printText("O : TURN OFF MUSIC", x - 2, y++, LIGHT_PURPLE);
 
 }
 
-void drawDeTable(char cell[5][10], int ROWS, int COLS)
-{
-	for (int row = 1; row < ROWS - 1; row++) 
-	{
-		for (int col = 1; col < COLS - 1; col++)
-		{
-			drawdeBox(cell, row, col);
-		}
-	}
-
-}
-
-void drawTable(COORD cursor, COORD helpp[2], board curboard, int ROWS, int COLS)
+void drawTable(COORD cursor, COORD helpp[2], board curboard, string background[], int ROWS, int COLS)
 {
 
 	int i = 0;
@@ -117,6 +87,7 @@ void drawTable(COORD cursor, COORD helpp[2], board curboard, int ROWS, int COLS)
 				else if (curboard[row][col].KeyinBox() == '0') //ô đã xóa vẫn tô xanh chữ xanh để theo dõi con trỏ 
 				{
 					SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE | FOREGROUND_GREEN | BACKGROUND_BLUE | BACKGROUND_GREEN);
+					drawBox(curboard[row][col].box, row, col);
 				}
 				else //ô chưa xóa tô xanh chữ đỏ 
 					SetConsoleTextAttribute(hConsole, FOREGROUND_RED | BACKGROUND_BLUE | BACKGROUND_GREEN);// tô xanh
@@ -130,7 +101,8 @@ void drawTable(COORD cursor, COORD helpp[2], board curboard, int ROWS, int COLS)
 				}
 				else if (curboard[row][col].KeyinBox() == '0')
 				{
-					SetConsoleTextAttribute(hConsole, 0);
+					SetConsoleTextAttribute(hConsole, 14);
+					drawBackgroundBox(background, ROWS, row, col);
 				}
 				else
 					SetConsoleTextAttribute(hConsole, curboard[row][col].key % 15 + 1); // others cell are at their base colors
@@ -139,7 +111,7 @@ void drawTable(COORD cursor, COORD helpp[2], board curboard, int ROWS, int COLS)
 				SetConsoleTextAttribute(hConsole, FOREGROUND_BLUE | BACKGROUND_BLUE);
 
 			// print the cell contents
-		
+			if(curboard[row][col].KeyinBox() != '0')
 				drawBox(curboard[row][col].box, row, col);
 			
 		}
@@ -224,7 +196,7 @@ void drawNotiTable(int x, int y, int width, int length, string outputline1, stri
 {
 	drawRectangle(x - 5, y, width + 10, length * 3 + 5, LIGHT_BLUE);
 	drawRectangle(x, y + 1, width, length, WHITE);
-	printText("NOTIFICATION", x + 4, y + 2, LIGHT_BLUE);
+	printText("STATUS", x + 7, y + 2, LIGHT_BLUE);
 	y += 1 + length; //draw table vertically    
 
 	drawRectangle(x - 4, y, width + 8, length * 3, WHITE);
@@ -232,7 +204,7 @@ void drawNotiTable(int x, int y, int width, int length, string outputline1, stri
 	for (int j = 0; j < 6; j++)
 	{
 		SetConsoleTextAttribute(hConsole, 0);
-		gotoxy(x - 3, y + j); cout << "cccccccccccccccccccccccccc";
+		gotoxy(x - 3, y + j); cout << "                          ";
 	}
 		printText(outputline1, x-2, y + 2, LIGHT_YELLOW);
 		printText(outputline2, x-2, y + 3, LIGHT_YELLOW);
@@ -244,22 +216,22 @@ void getPosition(char input, COORD& CurPos, int ROWS, int COLS) //get coordinate
 {
 	if (input == 72 && CurPos.Y !=1) 
 	{ // up arrow
-		playSound(1, 1);
+		moveSound();
 		CurPos.Y--;
 	}
 	else if (input == 80 && CurPos.Y < ROWS - 2) 
 	{ // down arrow
-		playSound(1, 1);
+		moveSound();
 		CurPos.Y++;
 	}
 	else if (input == 75 && CurPos.X != 1) 
 	{ // left arrow
-		playSound(1, 1);
+		moveSound();
 		CurPos.X--;
 	}
 	else if (input == 77 && CurPos.X < COLS - 2) 
 	{ // right arrow
-		playSound(1, 1);
+		moveSound();
 		CurPos.X++;
 	}
 	else
@@ -277,31 +249,44 @@ int selectCell(char input, COORD CurPos, board playingBoard)
 	return 0;
 }
 
-void gameBackground(int x, int y)
+void ReadBackgroundfile(string background[], int boardsize)
+{
+	ifstream ifs;
+	string filename = (boardsize == 6) ? "easy.txt" : "normal.txt";
+	int i = 0;
+	ifs.open(filename, ios::in);
+	while (!ifs.eof())
+	{
+		getline(ifs, background[i]);
+		int j = background[i].length();
+		while (j < 9 * 8)
+		{
+			background[i].push_back(' ');
+			j++;
+		}
+		i++;
+	}
+	while (i < 5 * 8)
+	{
+		int j = 0;
+		while (j < 9 * 8)
+		{
+			background[i].push_back(' ');
+			j++;
+		}
+		i++;
+	}
+	ifs.close();
+}
+
+void gameBackground(string background[], int boardsize)//sua ham nay
 {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(hConsole, 14);
-	gotoxy(x, y);
-	cout << R"(
-			  _______________n_n_
-		 _ ,-'                   \_
-		(_/                    '_'o\
-		  |                    (__) )
-		  \    |________|   |___,.-'
-		   |   |_|______|   |n_n_
-		 _ \___/        \___/    \_
-		(_ d888          8888  @ @.\
-		   Y888          Y88P    -- )
-		   '888b_________d88b___,.-'
-			Y888_|_______8888n_n_
-		  __"YP"         "YP"    \_
-		 (_/                   ' 'o\
-		   |                     -- )
-		   \    |_______|   |___,.-'
-			|   | |     |   | |
-			\___/-'     \___/-'
-
-)";
+	for (int i = 0; i < boardsize*5; i++)
+	{
+		cout << background[i] << endl;
+	}
 }
 
 void generateBoard(board& curboard, int ROWS, int COLS, int amountpoke)
@@ -347,6 +332,7 @@ void StandardMode1(Player& curplayer, int ROWS, int COLS, int Continue)
 	int i = 1;//turn on/off music
 	int savegame = 0; //CHƯA XỬ LÝ BIẾN NÀY
 
+	string background[80];
 	COORD curpos{ ROWS/2 - 1, COLS/2 };//vị trí của con trỏ trên bảng
 	COORD selpos[2]{ -1,-1};//vị trí của 2 con trỏ được chọn để nối với nhau
 	COORD helppos[2]{ -1,-1, -1, -1 }; //vị trí của 2 ô được gợi ý 
@@ -355,8 +341,10 @@ void StandardMode1(Player& curplayer, int ROWS, int COLS, int Continue)
 
 	system("CLS");
 	//initial a board
+	//gameBackground(0, 6);
+	ReadBackgroundfile(background, ROWS);
+	gameBackground(background, ROWS);
 	drawRectangle(8, 4, 10 * (COLS - 2) + 3, 2 + 5 * (ROWS - 2), WHITE);
-	gameBackground(0, 6);
 	drawSubTable(86, 5, 20, 3, score);//cập nhật điểm
 	drawNotiTable(86, 21, 20, 3, " ", "  HOPE YOU HAVE FUN :3", " ");//cập nhật các thông báo ở bảng noti
 	if (Continue == 0) // new game
@@ -369,7 +357,7 @@ void StandardMode1(Player& curplayer, int ROWS, int COLS, int Continue)
 	{
 		stateRead(newboard, curpos, COLS, ROWS, curplayer.state[(ROWS == 6) ? 0 : 1]);
 		score = curplayer.state[(ROWS == 6) ? 0 : 1].CurrentScore;
-		drawTable(curpos, helppos, newboard, ROWS, COLS);
+		drawTable(curpos, helppos, newboard, background, ROWS, COLS);
 		int n = 0;
 		while (curplayer.state[(ROWS == 6) ? 0 : 1].board[n] != NULL)
 		if(curplayer.state[(ROWS == 6) ? 0 : 1].board[n++]=='0')
@@ -384,11 +372,13 @@ void StandardMode1(Player& curplayer, int ROWS, int COLS, int Continue)
 		if (!helpFunc(newboard, ROWS, temppos[0], temppos[1])) //check xem có bị kẹt đường hay không, nếu có thì tráo lại bảng giữ nguyên vị trí
 		{
 			shuffle2(newboard, ROWS);
-			drawTable(curpos, helppos, newboard, ROWS, COLS);
+			drawTable(curpos, helppos, newboard, background, ROWS, COLS);
+			string line1 = "       NO MORE STEPS";
+			string line2 = "   THE BOARD WAS SHUFFLED";
+			drawNotiTable(86, 21, 20, 3, line1, line2, " ");//cập nhật các thông báo ở bảng noti
 		}
-
 		drawSubTable(86, 5, 20, 3, score);//cập nhật điểm
-		drawTable(curpos, helppos, newboard, ROWS, COLS);
+		drawTable(curpos, helppos, newboard, background, ROWS, COLS);
 		input = _getch();//nhận lệnh từ bàn phím
 		enterTime += selectCell(input, curpos, newboard);//đếm số lần enter
 		// turn on/off music
@@ -413,7 +403,7 @@ void StandardMode1(Player& curplayer, int ROWS, int COLS, int Continue)
 		else if (enterTime == 0 && newboard[curpos.Y][curpos.X].isSelected == 1)//xu ly khi an enter lan 1
 		{
 			if(input=='\r')
-			playSound(2, 1);
+			enterSound();
 			selpos[0].Y = curpos.Y; 
 			selpos[0].X = curpos.X; 
 			string line1;
@@ -432,7 +422,7 @@ void StandardMode1(Player& curplayer, int ROWS, int COLS, int Continue)
 			enterTime = -1;
 			if ( newboard[selpos[0].Y][selpos[0].X].KeyinBox() == newboard[selpos[1].Y][selpos[1].X].KeyinBox() && checkAndDraw(newboard, selpos[0], selpos[1], ROWS, 14) != 0)
 			{
-				playSound(2, 1);
+				enterSound();
 				
 				int getscore = checkAndDraw(newboard, selpos[0], selpos[1], ROWS, 14);
 				Sleep(700);
@@ -461,14 +451,14 @@ void StandardMode1(Player& curplayer, int ROWS, int COLS, int Continue)
 		{
 			playSound(1, 1);
 			helpFunc(newboard, ROWS, helppos[0], helppos[1]);
-			drawTable(curpos, helppos, newboard, ROWS, COLS);
+			drawTable(curpos, helppos, newboard, background, ROWS, COLS);
 			Sleep(500);
 			//reset suggestion position
 			temppos[0] = helppos[0];
 			temppos[1] = helppos[1];
 			helppos[0] = { -1, -1 };
 			helppos[1] = { -1, -1 };
-			drawTable(curpos, helppos, newboard, ROWS, COLS);
+			drawTable(curpos, helppos, newboard, background, ROWS, COLS);
 			string line1;
 			string line2;
 			string line3;
@@ -480,13 +470,13 @@ void StandardMode1(Player& curplayer, int ROWS, int COLS, int Continue)
 			line3.insert(1, to_string(temppos[1].Y));
 			line3.insert(4, to_string(temppos[1].X));
 			line2 += " MATCHES " + line3;
-			drawNotiTable(86, 21, 20, 3, line1, line2, " -3 POINTS");//cập nhật các thông báo ở bảng noti
+			drawNotiTable(86, 21, 20, 3, line1, line2, "      -3 POINTS ");//cập nhật các thông báo ở bảng noti
 			score -= 3;
 		}
 		else if (input == 'f' || input == 'F')
 		{
 			shuffle2(newboard, ROWS);
-			string line1 = " BOARD WAS SHUFFLED";
+			string line1 = "   BOARD WAS SHUFFLED";
 			string line2 = "      -1 POINTS ";
 			score -= 1;
 			drawNotiTable(86, 21, 20, 3, line1, line2, " ");
@@ -502,7 +492,7 @@ void StandardMode1(Player& curplayer, int ROWS, int COLS, int Continue)
 			savegame = 1;
 			break;
 		}
-		drawTable(curpos, helppos, newboard, ROWS, COLS);
+		drawTable(curpos, helppos, newboard, background, ROWS, COLS);
 	}
 	playSound(3, -1);
 	if (savegame == 0)
@@ -510,7 +500,7 @@ void StandardMode1(Player& curplayer, int ROWS, int COLS, int Continue)
 		playSound(7, 1);
 		curpos.Y = 0;
 		curpos.X = 0;
-		drawTable(curpos, helppos, newboard, ROWS, COLS);
+		drawTable(curpos, helppos, newboard, background, ROWS, COLS);
 		for (int j = 0; j < 5; j++)
 		{
 			SetConsoleTextAttribute(hConsole, 10 + j);

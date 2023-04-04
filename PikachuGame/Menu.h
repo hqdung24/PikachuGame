@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 #include <wincon.h>
+#include <fstream>
 #include "Struct.h"
 #include "UserData.h"
 using namespace std;

@@ -56,3 +56,7 @@ void ConsoleSetting();
 void setAndCenterWindow();
 
 void playSound(int, int); //choose id of sound effect list, return 1 if succesfully play the sound
+
+void enterSound();
+
+void moveSound();
