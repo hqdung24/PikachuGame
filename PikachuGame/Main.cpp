@@ -1,4 +1,4 @@
-// PikachuGame.cpp : This file contains the 'main' function. Program execution begins and ends there.
+﻿// PikachuGame.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
 #include "StandardMode.h"
@@ -12,7 +12,7 @@ int n = 6;
 
 int main()
 {
-    int temp = 15;
+    /*int temp = 15;
     strcpy(playerlist[0].name, "dung1");
     strcpy(playerlist[0].password, "haha");
     playerlist[0].record.points = temp--;
@@ -30,8 +30,8 @@ int main()
     playerlist[4].record.points = temp--;
     strcpy(playerlist[5].name, "dung6");
     strcpy(playerlist[5].password, "haha");
-    playerlist[5].record.points = temp--;
-    binaryRead(playerlist, "test.bin", n);
+    playerlist[5].record.points = temp--;*/
+    //đọc file binary trước khi khởi động chương trình
     srand(time(0));
     ConsoleSetting();
     int playerindex = -1;
@@ -41,12 +41,11 @@ int main()
         //printBanner("");
         drawBackground(100, 5);
         //playSound(0, 1);
+        binaryRead(playerlist, "test.bin", n, 'k');
         playerindex = StartMenuChoice(playerlist, n);
         if (playerindex == -1) break;
         game(playerlist, n, playerindex);
     }
-    cout << n << endl;
-    cout << playerlist[8].name;
     return 0;
 }
 

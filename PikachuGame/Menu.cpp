@@ -446,7 +446,7 @@ void game(Player playerlist[100], int n, int index)
         case 3: //Sign out option
         {
             cout << "3";
-            binaryWrite(playerlist, "test.bin", n);
+            binaryWrite(playerlist, "test.bin", n, 'k');
             break;
         }
         default:

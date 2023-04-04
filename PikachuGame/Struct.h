@@ -82,9 +82,9 @@ struct State { //Representing a board state
 
 struct Date
 {
-    int dd = 2;
-    int mm = 4;
-    int yy = 2023;
+    int dd;
+    int mm;
+    int yy;
 };
 
 struct Record
@@ -110,7 +110,7 @@ struct Player
         //tm_year, tm_month, tm_day là biến con của struct tm *localtime(const time_t *time);
         record.date.yy = 1900 + ltm->tm_year; // +1900 vì tm_year cho biết đã bao nhiêu năm từ 1900
         record.date.mm = 1 + ltm->tm_mon; // +1 bởi vì tm_mon cho biết tháng của năm chạy từ 0 đến 11
-        record.date.dd = ltm->tm_mday;
+        record.date.dd = ltm->tm_mday; //lưu thông tin ngày vào struct
         record.points = score;
     }
     void outputDate()

@@ -96,7 +96,10 @@ int EnterInfor(Player playerlist[100], int& n, int x, int y)//return the index o
 
 void stateSave(board a, COORD cursor, int columns, int rows, State& s)
 {
+	// biến len dùng để ghi lần lượt các kí tự trong mảng s.board[]
 	int len = 0;
+	// ghi bảng chơi cũ vào trong mảng 2 chiều a[]
+	// ghi lần lượt từng hàng của từng cột
 	for (int i = 1; i < columns - 1; i++)
 	{
 		for (int k = 1; k < rows - 1; k++)
@@ -105,21 +108,30 @@ void stateSave(board a, COORD cursor, int columns, int rows, State& s)
 			len++;
 		}
 	}
+	//đặt kí tự cuối cùng của mảng s.board [] là 1 null character để kết thúc chuỗi
 	s.board[len] = '/0';
+	// lưu các địa chỉ hiện tại của con trỏ
 	s.p_ = cursor.X;
 	s.q_ = cursor.Y;
+	//lưu các số lượng cột hàng
 	s.p = rows;
 	s.q = columns;
+	//:v cmt chỗ này đi Dũng
 	Beep(500, 1000);
 }
 
 void stateRead(board& a, COORD& cursor, int columns, int rows, State& s)
 {
+	// biến len dùng để đọc lần lượt các kí tự trong mảng s.board[]
 	int len = 0;
+	// đọc các địa chỉ hiện tại của con trỏ
 	cursor.X = s.p_;
 	cursor.Y = s.q_;
+	// đọc số lượng hàng cột
 	rows = s.p;
 	columns = s.q;
+	// đọc bảng chơi cũ vào trong mảng 2 chiều a[]
+	// đọc lần lượt từng hàng của từng cột
 	for (int i = 1; i < columns - 1; i++)
 	{
 		for (int k = 1; k < rows - 1; k++)
@@ -142,14 +154,15 @@ void recordSave(Record& r, int points)
 	//tm_year, tm_month, tm_day là biến con của struct tm *localtime(const time_t *time);
 	r.date.yy = 1900 + ltm->tm_year; // +1900 vì tm_year cho biết đã bao nhiêu năm từ 1900
 	r.date.mm = 1 + ltm->tm_mon; // +1 bởi vì tm_mon cho biết tháng của năm chạy từ 0 đến 11
-	r.date.dd = ltm->tm_mday;
-	r.points = points;
+	r.date.dd = ltm->tm_mday; // ghi ngày vào trong struct
+	r.points = points; // ghi điểm
 }
 
-void binaryRead(Player player[], const char* fileName, int& n)
+void binaryRead(Player player[], const char* fileName, int& n, char mask)
 {
 	fstream myfile;
 	myfile.open(fileName, ios::binary | ios::in);
+	//kt xem file có mở dc ko
 	if (!myfile.is_open())
 	{
 		system("CLS");
@@ -157,39 +170,63 @@ void binaryRead(Player player[], const char* fileName, int& n)
 		system("pause");
 		return;
 	}
-	//n* sizeof(Player) là để tính kích thước của mảng struct player, ko thể sử dụng sizeof(player) vì nó sẽ trả ra kích thước của con trỏ
+	//đọc độ dài mảng player[] vào 4 byte đầu của file binary
 	myfile.read((char*)&n, sizeof(n));
+	//n * sizeof(Player) là để tính kích thước của mảng struct player[], ko thể sử dụng sizeof(player) vì nó sẽ trả ra kích thước của con trỏ
 	myfile.read((char*)player, n * sizeof(Player));
+	// XOR từng byte trong mảng player[]
+	for (int i = 0; i < n * sizeof(Player); i++)
+	{
+		((char*)player)[i] ^= 't';
+	}
+	// XOR từng byte trong mảng player[]
+	for (int i = 0; i < n * sizeof(Player); i++)
+	{
+		((char*)player)[i] ^= mask;
+	}
 	myfile.close();
 }
 
-void binaryWrite(Player player[], const char* fileName, int n)
+void binaryWrite(Player player[], const char* fileName, int n, char mask)
 {
 	//viết tất cả vào file
 	fstream myfile;
+	//mở file ở chế độ ghi đè (xóa hết tất cả nội dung cũ để ghi nội dung mới)
 	myfile.open(fileName, ios::binary | ios::out | ios::trunc);
 	if (!myfile.is_open())
 	{
 		system("CLS");
 		cout << "Erorr. File don't exist..." << endl;
-
 		system("pause");
 		return;
 	}
+	//đọc độ dài mảng player[] vào 4 byte đầu của file binary
 	myfile.write((char*)&n, sizeof(n));
-	myfile.write((char*)player, n * sizeof(Player));//sizeof dùng để lấy kích thước của struct savefile. Coi ref để hiểu thêm.
+	// XOR từng byte trong mảng player[]
+	for (int i = 0; i < n * sizeof(Player); i++)
+	{
+		((char*)player)[i] ^= mask;
+	}
+	// XOR từng byte trong mảng player[]
+	for (int i = 0; i < n * sizeof(Player); i++)
+	{
+		((char*)player)[i] ^= 't';
+	}
+	//n * sizeof(Player) là để tính kích thước của mảng struct player[], ko thể sử dụng sizeof(player) vì nó sẽ trả ra kích thước của con trỏ
+	myfile.write((char*)player, n * sizeof(Player));
 	myfile.close();
 	return;
 }
 
 void swap(Player& a, Player& b)
 {
+	//tráo đổi vị trí giữa 2 phần tử trong mảng struct Player
 	Player t = a;
 	a = b;
 	b = t;
 }
 
-// Function to implement Interchange Sort
+// Sắp xếp từ lớn đến bé bằng thuật toán Interchange Sort
 void sortLeaderboard(Player p[], int amountPlayer)
 {
 	for (int i = 0; i < amountPlayer; i++)

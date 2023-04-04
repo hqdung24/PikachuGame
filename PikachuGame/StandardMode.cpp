@@ -304,10 +304,11 @@ void gameBackground(int x, int y)
 )";
 }
 
-void generateBoard(board& curboard, int ROWS, int COLS, int amountpoke)
+void generateBoard(board& curboard, int ROWS, int COLS)
 {
 	int random1, random2, len = 0;
 	char temp[100] = { 0 };
+	// gán tất cả phần tử trong mảng curboard[][] = '0'
 	for (int i = 1; i < ROWS - 1; i++)
 	{
 		for (int k = 1; k < COLS - 1; k++)
@@ -315,24 +316,31 @@ void generateBoard(board& curboard, int ROWS, int COLS, int amountpoke)
 			curboard[i][k].box[2][4] = '0';
 		}
 	}
+	//gắn các kí tự ngẫu nhiên vào 1 nửa bảng và vào mảng tạm temp[]
 	for (int i = 1; i < ROWS - 1; i++)
 	{
 		for (int k = 1; k < (COLS / 2); k++)
 		{
+			//tạo ngẫu nhiên 1 kí tự in hoa trong bảng chữ cái tiếng Anh 26 chữ
 			char store = char(rand() % 15 + 65);
+			//lưu kí tự dc tạo ngẫu nhiên ở trên vào mảng curboard[][]
 			curboard[i][k].box[2][4] = store;
 			curboard[i][k].key = store;
+			//lưu các kí tự ngẫu nhiên ở trên vào mảng tạm temp[]
 			temp[len] = store;
 			len++;
 		}
 	}
-
+	//lưu các kí tự ở trong mảng tạm temp[] vào các ô trống ngẫu nhiên của mảng curboard[][](nửa bảng còn lại)
 	for (int i = 0; i < len; i++)
 	{
+		//vòng lặp do while để tạo ngẫu nhiên dc địa chỉ của 1 ô trống
 		do {
 			random1 = rand() % (ROWS - 2) + 1;
 			random2 = rand() % (COLS - 2) + 1;
-		} while (curboard[random1][random2].KeyinBox() != '0');
+			//KeyinBox chỉ tới giá trị hiện tại có trong ô của mảng curboard[][], coi struct board ở trong file Struct.h để hiểu thêm
+		} while (curboard[random1][random2].KeyinBox() != '0'); 
+		//lưu giá trị của temp[i] vào ô trống có địa chỉ ngẫu nhiên dc tạo ra ở trên 
 		curboard[random1][random2].box[2][4] = temp[i];
 		curboard[random1][random2].key = temp[i];
 	}
@@ -361,7 +369,7 @@ void StandardMode1(Player& curplayer, int ROWS, int COLS, int Continue)
 	drawNotiTable(86, 21, 20, 3, " ", "  HOPE YOU HAVE FUN :3", " ");//cập nhật các thông báo ở bảng noti
 	if (Continue == 0) // new game
 	{
-		generateBoard(newboard, ROWS, COLS, 14);
+		generateBoard(newboard, ROWS, COLS);
 		drawBoardAtStart(newboard, ROWS, COLS);
 		
 	}
